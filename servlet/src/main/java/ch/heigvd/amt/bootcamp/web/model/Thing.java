@@ -1,4 +1,4 @@
-package ch.heigvd.amt.bootcamp.web;
+package ch.heigvd.amt.bootcamp.web.model;
 
 public class Thing {
     private String title;

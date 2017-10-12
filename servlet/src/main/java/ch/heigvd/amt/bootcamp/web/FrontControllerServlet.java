@@ -1,5 +1,7 @@
 package ch.heigvd.amt.bootcamp.web;
 
+import ch.heigvd.amt.bootcamp.web.model.Thing;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +33,12 @@ public class FrontControllerServlet extends HttpServlet {
     Random rand = new Random();
 
     List things = new ArrayList<String>();
-    for (int i = 1; i <= 0; i++) {
+    for (int i = 1; i <= 50; i++) {
       things.add(new Thing(i + "th", loremIpsum[rand.nextInt(loremIpsum.length)]));
     }
 
     request.setAttribute("things", things);
-    request.getRequestDispatcher("/WEB-INF/pages/").forward(request, response);
+    request.getRequestDispatcher("/WEB-INF/pages").forward(request, response);
   }
 
 

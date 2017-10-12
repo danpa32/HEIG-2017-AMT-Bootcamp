@@ -26,7 +26,7 @@ public class RoutingFilter implements Filter {
     if (isStaticAsset(path)) {
       chain.doFilter(request, response);
     } else {
-      request.getRequestDispatcher("/frontController" + path).forward(request, response);
+      request.getRequestDispatcher("/manage_things" + path).forward(request, response);
     }
   }
 
