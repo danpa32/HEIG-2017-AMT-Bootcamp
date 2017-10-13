@@ -1,25 +1,14 @@
-package ch.heigvd.amt.bootcamp.web;
+package ch.heigvd.amt.bootcamp.service;
 
-import ch.heigvd.amt.bootcamp.service.ThingsManager;
+import ch.heigvd.amt.bootcamp.model.Thing;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-@WebServlet(name = "ManageThingsServlet", urlPatterns = {"/manage_things"})
-public class ManageThingsServlet extends HttpServlet {
+import java.util.Random;
 
-    ThingsManager thingsManager = new ThingsManager();
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        /*String[] loremIpsum = {
+public class ThingsManager {
+    public List<String> getThings() {
+        String[] loremIpsum = {
                 "Parem quaedam esse Saepe nequaquam Mummio numquam excellentiae suosque Q.",
                 "Vicissimque simulatione coluntur solet causa verum etiam quidem minus solet videri fictum est temporis enim hoc id dandis et princeps mihi ab redderet et alio Amor coniungendam videri ab simulatum.",
                 "Conpage ad eosque truncata praecipitem Domitianum mox velut abiecerunt discursu eodem mox raptavere impetu superscandentes. ",
@@ -35,12 +24,7 @@ public class ManageThingsServlet extends HttpServlet {
         for (int i = 1; i <= 50; i++) {
             things.add(new Thing(i + "th", loremIpsum[rand.nextInt(loremIpsum.length)]));
         }
-        */
 
-        List things = thingsManager.getThings();
-
-        request.setAttribute("things", things);
-
-        request.getRequestDispatcher("/WEB-INF/pages/manage_things.jsp").forward(request, response);
+        return things;
     }
 }

@@ -1,6 +1,6 @@
 package ch.heigvd.amt.bootcamp.web;
 
-import ch.heigvd.amt.bootcamp.web.model.Thing;
+import ch.heigvd.amt.bootcamp.model.Thing;
 
 import java.io.IOException;
 import java.util.ArrayList;

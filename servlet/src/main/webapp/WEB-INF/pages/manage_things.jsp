@@ -26,9 +26,21 @@
                 <c:forEach var="thing" items="${requestScope.things}">
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="card">
-                            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
+
                             <div class="card-body">
                                 <h4 class="card-title">${thing.getTitle()}</h4>
+                                <p class="card-text">${thing.getDescription()}</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">${thing.getDescription()}</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">${thing.getDescription()}</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">${thing.getDescription()}</p>
+                            </div>
+                            <div class="card-body">
                                 <p class="card-text">${thing.getDescription()}</p>
                             </div>
                             <div class="card-footer">
