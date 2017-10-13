@@ -1,10 +1,12 @@
 package ch.heigvd.amt.bootcamp.model;
 
-public class Thing {
+public class Quote {
+    public static String[] CATEGORIES = {"Philosophy", "War", "Life"};
+
     private String title;
     private String description;
 
-    public Thing(String title, String description) {
+    public Quote(String title, String description) {
         this.title = title;
         this.description = description;
     }
