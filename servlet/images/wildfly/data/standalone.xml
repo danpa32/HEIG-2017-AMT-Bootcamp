@@ -148,8 +148,8 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jta="true" jndi-name="java:/wroong" pool-name="wroong" enabled="true" use-ccm="true">
-                    <connection-url>jdbc:mysql://db:3306/wroong</connection-url>
+                <datasource jta="true" jndi-name="java:/quotes" pool-name="quotes" enabled="true" use-ccm="true">
+                    <connection-url>jdbc:mysql://db:3306/db_quotes</connection-url>
                     <driver-class>com.mysql.jdbc.Driver</driver-class>
                     <driver>mysql-connector-java-5.1.44-bin.jar_com.mysql.jdbc.Driver_5_1</driver>
                     <security>
