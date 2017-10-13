@@ -42,7 +42,8 @@
                             <div class="card-footer">
                                 <div class="btn-group">
                                     <a href="#" class="btn btn-outline-primary">Edit</a>
-                                    <a href="#" class="btn btn-outline-danger">Delete</a>
+                                    <a href="#delete" class="btn btn-outline-danger"
+                                       data-toggle="modal" data-target="#confirmDelete">Delete</a>
                                 </div>
                             </div>
                         </div>
