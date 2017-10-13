@@ -26,8 +26,8 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
 
         this.quotes = new ArrayList<Quote>();
 
-        for (int i = 1; i <= 20; i++) {
-            quotes.add(new Quote(i + "th", loremIpsum[rand.nextInt(loremIpsum.length)]));
+        for (int i = 1; i <= 200; i++) {
+            quotes.add(new Quote(i,i + "th", loremIpsum[rand.nextInt(loremIpsum.length)]));
         }
     }
 

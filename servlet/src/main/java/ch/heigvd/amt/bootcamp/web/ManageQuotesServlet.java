@@ -27,6 +27,36 @@ public class ManageQuotesServlet extends HttpServlet {
 
         request.setAttribute("quotes", quotes);
 
+        setSanitizedURL(request);
+
+        // (Dis)activate delete confirmation
+        String confirmParam = request.getParameter("confirm");
+        if(confirmParam != null) {
+            request.getSession().setAttribute("confirmDelete", !confirmParam.equals("0"));
+        }
+
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
+    }
+
+    /**
+     * Generate URL used for sorting purpose
+     * @param request
+     */
+    private void setSanitizedURL(HttpServletRequest request) {
+        String query = request.getQueryString();
+
+        String cleanQuery = removeQueryStringParam(query, "del");
+        cleanQuery = removeQueryStringParam(cleanQuery, "confirm");
+        request.setAttribute("cleanQuery", cleanQuery);
+
+        String ascQuery = removeQueryStringParam(query, "asc");
+        request.setAttribute("ascQuery", ascQuery);
+
+        String sortQuery = removeQueryStringParam(query, "sort");
+        request.setAttribute("sortQuery", sortQuery);
+    }
+
+    private String removeQueryStringParam(String queryString, String paramName) {
+        return queryString.replaceAll(paramName + "[^&]*&?", "").replaceFirst("&$", "");
     }
 }

@@ -21,12 +21,26 @@
                 Sort by
             </a>
             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                <c:forEach var="category" items="${Quote.CATEGORIES}">
-                    <a class="dropdown-item" href="#">${category}</a>
+                <c:forEach var="field" items="<%=Quote.FIELDS.values()%>">
+                    <a class="dropdown-item" href="<c:url value="?${requestScope.sortQuery}"><c:param name="sort" value="${field}" /></c:url>">${field}</a>
                 </c:forEach>
             </div>
         </div>
-        <a href="#" class="btn btn-outline-primary">Asc/Desc</a>
+        <c:choose>
+            <c:when test="${requestScope.asc == false}" >
+                <div class="btn-group" role="group">
+                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-primary">Asc</a>
+                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-outline-primary">Desc</a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="btn-group" role="group">
+                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-outline-primary">Asc</a>
+                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-primary">Desc</a>
+                </div>
+            </c:otherwise>
+        </c:choose>
+
     </header>
 
     <c:choose>
@@ -42,8 +56,8 @@
                             <div class="card-footer">
                                 <div class="btn-group">
                                     <a href="#" class="btn btn-outline-primary">Edit</a>
-                                    <a href="#delete" class="btn btn-outline-danger"
-                                       data-toggle="modal" data-target="#confirmDelete">Delete</a>
+                                    <a href="<c:url value="?${requestScope.cleanQuery}"><c:param name="del" value="${quote.id}" /></c:url>" class="btn btn-outline-danger"
+                                            <c:if test="${sessionScope.confirmDelete != false}"> data-toggle="modal" data-target="#confirmDelete" </c:if>>Delete</a>
                                 </div>
                             </div>
                         </div>

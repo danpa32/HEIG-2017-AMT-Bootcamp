@@ -22,12 +22,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>If you press Delete, you will definitivly remove this quote from the database.</p>
+                <p>If you click on Delete, you will definitivly remove this quote from the database.</p>
                 <div class="container mx-auto"><div class="card"></div></div>
+                <div class="mt-4 form-check">
+                    <label class="form-check-label">
+                        <input id="confirmAgain" type="checkbox" class="form-check-input">
+                        Don't ask me again
+                    </label>
+                </div>
             </div>
             <div class="modal-footer">
-                <a href="#" type="button" class="btn btn-primary" data-dismiss="modal">Stoooop!</a>
-                <a href="#confirmDelete" type="button" class="btn btn-danger">Delete</a>
+                <a href="" type="button" class="btn btn-primary" data-dismiss="modal">Stoooop!</a>
+                <a id="confirmDeleteLink" href="" type="button" class="btn btn-danger">Delete</a>
             </div>
         </div>
     </div>
@@ -40,8 +46,20 @@
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var cardCopy = link.parent().parent().prev('.card-body').clone();
         var modal = $(this);
-        modal.find('#confirmDelete').attr('href', href);
+        var confirmLink = modal.find('#confirmDeleteLink');
+        confirmLink.attr('href', href);
         modal.find('.card').empty().append(cardCopy);
+
+        // Don't ask me again option
+        var again = modal.find('#confirmAgain');
+        again.prop('checked', false);
+        again.change('change', function () {
+            if(again.is(':checked')) {
+                confirmLink.attr('href', href + '&confirm=0');
+            } else {
+                confirmLink.attr('href', href);
+            }
+        });
     });
 </script>
 </body>

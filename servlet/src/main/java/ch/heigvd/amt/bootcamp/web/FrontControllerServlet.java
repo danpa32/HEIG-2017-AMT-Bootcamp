@@ -34,7 +34,7 @@ public class FrontControllerServlet extends HttpServlet {
 
     List things = new ArrayList<String>();
     for (int i = 1; i <= 50; i++) {
-      things.add(new Quote(i + "th", loremIpsum[rand.nextInt(loremIpsum.length)]));
+      things.add(new Quote(i, i + "th", loremIpsum[rand.nextInt(loremIpsum.length)]));
     }
 
     request.setAttribute("things", things);
