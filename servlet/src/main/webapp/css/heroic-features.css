@@ -22,14 +22,6 @@ body {
     text-align: right;
 }
 
-.card-footer > .btn {
-    margin-right: 5px;
-}
-
-.card-footer > .btn:last-child {
-     margin-right: unset;
-}
-
 .placeholder {
     padding-top: 5rem;
     padding-bottom: 5rem;

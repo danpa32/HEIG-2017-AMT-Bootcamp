@@ -1,4 +1,5 @@
-<%@ page import="ch.heigvd.amt.bootcamp.web.ManageThingsServlet" %>
+<%@ page import="ch.heigvd.amt.bootcamp.web.AddThingServlet" %>
+<%@ page import="ch.heigvd.amt.bootcamp.model.Quote" %>
 <%--
   Created by IntelliJ IDEA.
   User: daniel
@@ -7,5 +8,43 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@include file="includes/header.jsp"%>
+
+<div class="container">
+    <form class="my-4" role="form">
+        <fieldset>
+
+            <div class="form-group">
+                <label for="quote">Quote</label>
+                <textarea id="quote" class="form-control" placeholder="Quote" rows="5"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="author">Author</label>
+                    <input class="form-control" id="author" placeholder="Author" type="text">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="category">Category</label>
+                    <select id="category" class="form-control">
+                        <c:forEach var="category" items="${Quote.CATEGORIES}">
+                            <option value="${category}">${category}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="source">Source</label>
+                    <input class="form-control" id="source" placeholder="Source" type="text">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="date">Date</label>
+                    <input class="form-control" id="date" placeholder="Date" type="date">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="reset" class="btn btn-outline">Cancel</button>
+        </fieldset>
+    </form>
+</div>
 
 <%@include file="includes/footer.jsp"%>
