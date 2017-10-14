@@ -45,6 +45,8 @@ public class ManageQuotesServlet extends HttpServlet {
     private void setSanitizedURL(HttpServletRequest request) {
         String query = request.getQueryString();
 
+
+
         String cleanQuery = removeQueryStringParam(query, "del");
         cleanQuery = removeQueryStringParam(cleanQuery, "confirm");
         request.setAttribute("cleanQuery", cleanQuery);
@@ -57,6 +59,10 @@ public class ManageQuotesServlet extends HttpServlet {
     }
 
     private String removeQueryStringParam(String queryString, String paramName) {
-        return queryString.replaceAll(paramName + "[^&]*&?", "").replaceFirst("&$", "");
+        if(queryString == null) {
+            return "";
+        } else {
+            return queryString.replaceAll(paramName + "[^&]*&?", "").replaceFirst("&$", "");
+        }
     }
 }
