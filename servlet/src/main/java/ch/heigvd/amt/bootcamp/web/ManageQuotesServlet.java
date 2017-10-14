@@ -24,10 +24,7 @@ public class ManageQuotesServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List quotes = quotesManager.getAllQuotes();
-
-        request.setAttribute("quotes", quotes);
-
+        // QueryString for options links
         setSanitizedURL(request);
 
         // (Dis)activate delete confirmation
@@ -36,21 +33,54 @@ public class ManageQuotesServlet extends HttpServlet {
             request.getSession().setAttribute("confirmDelete", !confirmParam.equals("0"));
         }
 
-        // Alert
-        request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Some alert title", "An alert message."));
-
         // Asc/Desc
         String ascParam = request.getParameter("asc");
-        boolean asc = !ascParam.equals("0");
+        boolean asc = true;
+        if(ascParam != null) {
+            asc = !ascParam.equals("0");
+        }
         request.setAttribute("asc", asc);
 
         // Pagination
-        int page = 1;
-        int lastPage = 1;
-        request.setAttribute("page", page);
-        request.setAttribute("lastPage", lastPage);
+        String pageParam = request.getParameter("page");
+        int currentPage = 1;
+        if(pageParam != null) {
+            try {
+                currentPage = Integer.parseInt(pageParam);
+            } catch (NumberFormatException nfe) {
+                request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Unparseable parameter", "The page parameter is not an integer."));
+            }
+        }
+        setPagination(request, currentPage, 45);
+
+        // Recuperate the page of quote
+        List quotes = quotesManager.getAllQuotes();
+
+        request.setAttribute("quotes", quotes);
 
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
+    }
+
+    private void setPagination(HttpServletRequest request, int currentPage, int lastPage) {
+        final int SURROUNDING_PAGES = 3;
+
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("lastPage", lastPage);
+
+        request.setAttribute("prevPage", Integer.max(1, currentPage - 1));
+        request.setAttribute("nextPage", Integer.min(lastPage, currentPage + 1));
+
+        // Show first ?
+        request.setAttribute("showPrevPagesElipse", currentPage - SURROUNDING_PAGES - 1 > 1);
+        request.setAttribute("showFirstPageLink", currentPage - SURROUNDING_PAGES > 1);
+
+        // Show surrounding ?
+        request.setAttribute("firstSurroundPageLink", Integer.max(1,currentPage - SURROUNDING_PAGES));
+        request.setAttribute("lastSurroundPageLink", Integer.min(lastPage, currentPage + SURROUNDING_PAGES));
+
+        // Show last ?
+        request.setAttribute("showNextPagesElipse", currentPage  + SURROUNDING_PAGES + 1 < lastPage );
+        request.setAttribute("showLastPageLink", currentPage  + SURROUNDING_PAGES < lastPage );
     }
 
     /**
@@ -62,6 +92,7 @@ public class ManageQuotesServlet extends HttpServlet {
 
         String cleanQuery = removeQueryStringParam(query, "del");
         cleanQuery = removeQueryStringParam(cleanQuery, "confirm");
+        cleanQuery = removeQueryStringParam(cleanQuery, "page");
         request.setAttribute("cleanQuery", cleanQuery);
 
         String ascQuery = removeQueryStringParam(query, "asc");

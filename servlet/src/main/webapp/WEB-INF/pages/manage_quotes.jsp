@@ -70,40 +70,43 @@
             </div>
 
             <nav aria-label="Page navigation example">
-                <c:set var="page" value="${requestScope.page}" />
+                <c:set var="currentPage" value="${requestScope.currentPage}" />
                 <c:set var="lastPage" value="${requestScope.lastPage}" />
-                <c:set var="nbSurrondingPages" value="${3}" />
 
                 <ul class="pagination justify-content-center">
-                    <li class="page-item <c:if test="${page == 1}">disabled</c:if>">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    <li class="page-item <c:if test="${currentPage == 1}">disabled</c:if>">
+                        <a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${requestScope.prevPage}" /></c:url>" tabindex="-1">Previous</a>
                     </li>
 
-                    <c:if test="${page > 1 + nbSurrondingPages}">
+                    <c:if test="${requestScope.showFirstPageLink}">
                         <!-- First page -->
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item">...</li>
+                        <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="1" /></c:url>">1</a></li>
+                    </c:if>
+                    <c:if test="${requestScope.showPrevPagesElipse}">
+                        <li class="page-item px-2">...</li>
                     </c:if>
 
-                    <c:forEach begin="${page - nbSurrondingPages}" end="${page + nbSurrondingPages}" var="i">
+                    <c:forEach begin="${requestScope.firstSurroundPageLink}" end="${requestScope.lastSurroundPageLink}" var="i">
                         <c:choose>
-                            <c:when test="${page eq i}">
-                                <li class="page-item"><a class="page-link active" href="#">${i}</a></li>
+                            <c:when test="${currentPage == i}">
+                                <li class="page-item active"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${i}" /></c:url>">${i}<span class="sr-only">(current)</span></a></li>
                             </c:when>
                             <c:otherwise>
-                                <li class="page-item"><a class="page-link" href="#">${i}</a></li>
+                                <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${i}" /></c:url>">${i}</a></li>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
 
                     <!-- Last page -->
-                    <c:if test="${page < lastPage - nbSurrondingPages}">
-                        <li class="page-item">...</li>
-                        <li class="page-item"><a class="page-link" href="#">${lastPage}</a></li>
+                    <c:if test="${requestScope.showNextPagesElipse}">
+                        <li class="page-item px-2">...</li>
+                    </c:if>
+                    <c:if test="${requestScope.showLastPageLink}">
+                        <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${lastPage}" /></c:url>">${lastPage}</a></li>
                     </c:if>
 
-                    <li class="page-item <c:if test="${page == lastPage}">disabled</c:if>" >
-                        <a class="page-link" href="#">Next</a>
+                    <li class="page-item <c:if test="${currentPage eq lastPage}">disabled</c:if>" >
+                        <a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${requestScope.nextPage}" /></c:url>">Next</a>
                     </li>
                 </ul>
             </nav>
