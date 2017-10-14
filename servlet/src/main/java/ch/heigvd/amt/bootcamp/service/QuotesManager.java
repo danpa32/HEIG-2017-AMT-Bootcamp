@@ -5,6 +5,7 @@ import ch.heigvd.amt.bootcamp.model.Quote;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Stateless;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,5 +28,16 @@ public class QuotesManager implements QuotesManagerLocal {
     @Override
     public Quote getQuote(int id) {
         return quotesDataStore.getQuote(id);
+    }
+
+    @Override
+    public boolean generateQuotes(int n) {
+        try {
+            quotesDataStore.generateQuotes(n);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

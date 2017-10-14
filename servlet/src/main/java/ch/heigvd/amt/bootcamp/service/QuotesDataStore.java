@@ -1,46 +1,103 @@
 package ch.heigvd.amt.bootcamp.service;
 
 import ch.heigvd.amt.bootcamp.model.Quote;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import javax.sql.DataSource;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Startup
 @Singleton
 public class QuotesDataStore implements QuotesDataStoreLocal {
-    List<Quote> quotes;
 
-    public QuotesDataStore() {
-        String[] loremIpsum = {
-            "Parem quaedam esse Saepe nequaquam Mummio numquam excellentiae suosque Q.",
-            "Vicissimque simulatione coluntur solet causa verum etiam quidem minus solet videri fictum est temporis enim hoc id dandis et princeps mihi ab redderet et alio Amor coniungendam videri ab simulatum.",
-            "Conpage ad eosque truncata praecipitem Domitianum mox velut abiecerunt discursu eodem mox raptavere impetu superscandentes. ",
-            "Epigonus et gentilitatem Epigonus omnium oppressi praediximus appellatos molitioni Epigonus enim fabricarum Montium his vocabulis statuuntur nominum termino culpasse futurae.",
-            "Nullam et et abundans superiore.",
-            "Admodum corporis vel virtute ut virtute qui ut iucundius aedificio.",
-            "Libere etiam studium ab exspectemus in non in ne ad absit sanciatur consilium studium semper.",
-            "Ex offert sit atque statum sexus conductae nomine in in elegerit offert hastam diem conductae hastam est solvitur uterque ut."
-        };
+    @Resource(lookup = "java:/quotes")
+    private DataSource dataSource;
 
-        String[] sources = {
-                "CH", "USA", "BE", "UK"
-        };
-        Random rand = new Random();
+    private List<Quote> quotes;
 
-        this.quotes = new ArrayList<Quote>();
+    private JsonArray quoteAndAuthor;
+    private List<String> countries;
+    private List<String> categories;
 
-        for (int i = 1; i <= 200; i++) {
-            quotes.add(new Quote(
-                    i,
-                    loremIpsum[rand.nextInt(loremIpsum.length)],
-                    "author " + i,
-                    rand.nextInt(500) + 1500,
-                    sources[rand.nextInt(sources.length)],
-                    Quote.CATEGORIES[rand.nextInt(Quote.CATEGORIES.length)]));
+    @PostConstruct
+    void init() {
+        this.quotes = new ArrayList<>();
+        countries = new ArrayList<>();
+        categories = new ArrayList<>();
+
+        InputStream isQuotes = getClass().getClassLoader().getResourceAsStream("/quotes.json");
+        BufferedReader brQuotes = new BufferedReader(new InputStreamReader(isQuotes));
+        quoteAndAuthor = new JsonParser().parse(brQuotes).getAsJsonArray();
+
+        InputStream isCountries = getClass().getClassLoader().getResourceAsStream("/countries.json");
+        BufferedReader brCountries = new BufferedReader(new InputStreamReader(isCountries));
+        JsonArray jCountries = new JsonParser().parse(brCountries).getAsJsonArray();
+        for (JsonElement elem : jCountries) {
+            countries.add(elem.getAsJsonObject().get("name").getAsString());
+        }
+
+        InputStream isCategories = getClass().getClassLoader().getResourceAsStream("/categories.json");
+        BufferedReader brCategories = new BufferedReader(new InputStreamReader(isCategories));
+        JsonArray jCategories = new JsonParser().parse(brCategories).getAsJsonArray();
+        for (JsonElement elem : jCategories) {
+            categories.add(elem.getAsString());
         }
     }
 
+    public void generateQuotes(int n) throws SQLException {
+        int idCount = 0;
+        Random random = new Random();
+
+        for (int j = 0; j < n; j++) {
+            JsonElement elem = quoteAndAuthor.get(random.nextInt(quoteAndAuthor.size()));
+            Quote q = new Quote(idCount,
+                    elem.getAsJsonObject().get("quote").getAsString(),
+                    elem.getAsJsonObject().get("author").getAsString(),
+                    random.nextInt(500) + 1500,
+                    countries.get(random.nextInt(countries.size())),
+                    categories.get(random.nextInt(categories.size())));
+
+            quotes.add(q);
+            idCount++;
+        }
+
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO quote (quote, author, date, source, category) VALUES (?, ?, ?, ?, ?)");
+
+        int j = 0;
+        for (Quote curr : quotes) {
+            preparedStatement.setString(1, curr.getText());
+            preparedStatement.setString(2, curr.getAuthor());
+            preparedStatement.setInt(3, curr.getDate());
+            preparedStatement.setString(4, curr.getSource());
+            preparedStatement.setString(5, curr.getCategory());
+
+            j++;
+
+            preparedStatement.addBatch();
+            if (j%1000 == 0 || j == n - 1) {
+                preparedStatement.executeBatch();
+            }
+        }
+
+        connection.close();
+    }
+
+    /* TO DO CONNECTION WITH DATABASE */
     @Override
     public List<Quote> getQuotes() {
         return quotes;

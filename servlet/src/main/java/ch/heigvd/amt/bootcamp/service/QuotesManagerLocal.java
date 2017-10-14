@@ -10,4 +10,5 @@ public interface QuotesManagerLocal {
     List<Quote> getAllQuotes();
     List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc);
     Quote getQuote(int id);
+    boolean generateQuotes(int n);
 }
