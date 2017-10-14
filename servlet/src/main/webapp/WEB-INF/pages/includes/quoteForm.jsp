@@ -7,7 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-<form class="my-4" role="form">
+<form class="my-4" method="post" role="form">
     <fieldset>
         <c:set var="quote" value="${requestScope.quote}" />
         <c:if test="${quote != null}">
