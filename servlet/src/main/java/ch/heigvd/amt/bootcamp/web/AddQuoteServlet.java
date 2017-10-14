@@ -10,7 +10,7 @@ import java.io.IOException;
 @WebServlet(name = "AddQuoteServlet", urlPatterns = {"/addQuote"})
 public class AddQuoteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.getRequestDispatcher("/WEB-INF/pages/addQuote.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

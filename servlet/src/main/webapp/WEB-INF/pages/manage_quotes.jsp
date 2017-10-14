@@ -30,14 +30,14 @@
             <c:choose>
                 <c:when test="${requestScope.asc == false}" >
                     <div class="btn-group" role="group">
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-primary">Asc</a>
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-outline-primary">Desc</a>
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-outline-primary">Asc</a>
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-primary">Desc</a>
                     </div>
                 </c:when>
                 <c:otherwise>
                     <div class="btn-group" role="group">
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-outline-primary">Asc</a>
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-primary">Desc</a>
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-primary">Asc</a>
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-outline-primary">Desc</a>
                     </div>
                 </c:otherwise>
             </c:choose>
@@ -53,9 +53,9 @@
                             <div class="card-body">
                                 <blockquote class="blockquote mb-0">
                                     <p>${quote.text}</p>
-                                    <footer class="blockquote-footer">${quote.author} in <cite title="Source Title">${quote.source}</cite></footer>
+                                    <footer class="blockquote-footer">${quote.author} in <cite title="Source Title">${quote.source}</cite>, ${quote.date}</footer>
                                 </blockquote>
-                                <p class="card-text"><small class="text-muted">Category: ${quote.category}</small>, <small class="text-muted">Date: ${quote.date}</small></p>
+                                <p class="card-text"><small class="text-muted">Category: ${quote.category}</small></p>
                             </div>
                             <div class="card-footer">
                                 <div class="btn-group">
@@ -70,14 +70,39 @@
             </div>
 
             <nav aria-label="Page navigation example">
+                <c:set var="page" value="${requestScope.page}" />
+                <c:set var="lastPage" value="${requestScope.lastPage}" />
+                <c:set var="nbSurrondingPages" value="${3}" />
+
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
+                    <li class="page-item <c:if test="${page == 1}">disabled</c:if>">
                         <a class="page-link" href="#" tabindex="-1">Previous</a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
+
+                    <c:if test="${page > 1 + nbSurrondingPages}">
+                        <!-- First page -->
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item">...</li>
+                    </c:if>
+
+                    <c:forEach begin="${page - nbSurrondingPages}" end="${page + nbSurrondingPages}" var="i">
+                        <c:choose>
+                            <c:when test="${page eq i}">
+                                <li class="page-item"><a class="page-link active" href="#">${i}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="page-item"><a class="page-link" href="#">${i}</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+
+                    <!-- Last page -->
+                    <c:if test="${page < lastPage - nbSurrondingPages}">
+                        <li class="page-item">...</li>
+                        <li class="page-item"><a class="page-link" href="#">${lastPage}</a></li>
+                    </c:if>
+
+                    <li class="page-item <c:if test="${page == lastPage}">disabled</c:if>" >
                         <a class="page-link" href="#">Next</a>
                     </li>
                 </ul>

@@ -39,6 +39,17 @@ public class ManageQuotesServlet extends HttpServlet {
         // Alert
         request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Some alert title", "An alert message."));
 
+        // Asc/Desc
+        String ascParam = request.getParameter("asc");
+        boolean asc = !ascParam.equals("0");
+        request.setAttribute("asc", asc);
+
+        // Pagination
+        int page = 1;
+        int lastPage = 1;
+        request.setAttribute("page", page);
+        request.setAttribute("lastPage", lastPage);
+
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
     }
 
