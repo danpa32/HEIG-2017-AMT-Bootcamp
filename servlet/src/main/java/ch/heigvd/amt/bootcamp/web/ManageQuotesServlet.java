@@ -45,8 +45,6 @@ public class ManageQuotesServlet extends HttpServlet {
     private void setSanitizedURL(HttpServletRequest request) {
         String query = request.getQueryString();
 
-
-
         String cleanQuery = removeQueryStringParam(query, "del");
         cleanQuery = removeQueryStringParam(cleanQuery, "confirm");
         request.setAttribute("cleanQuery", cleanQuery);

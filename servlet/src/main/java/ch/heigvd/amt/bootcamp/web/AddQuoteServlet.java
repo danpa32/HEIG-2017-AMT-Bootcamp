@@ -7,13 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "AddThingServlet", urlPatterns = {"/addQuote"})
-public class AddThingServlet extends HttpServlet {
+@WebServlet(name = "AddQuoteServlet", urlPatterns = {"/addQuote"})
+public class AddQuoteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/pages/editThing.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/pages/addQuote.jsp").forward(request, response);
     }
 }

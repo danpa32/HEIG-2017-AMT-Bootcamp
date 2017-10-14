@@ -23,4 +23,9 @@ public class QuotesManager implements QuotesManagerLocal {
     public List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc) {
         return null;
     }
+
+    @Override
+    public Quote getQuote(int id) {
+        return quotesDataStore.getQuote(id);
+    }
 }

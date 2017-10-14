@@ -26,36 +26,40 @@
                 </c:forEach>
             </div>
         </div>
-        <c:choose>
-            <c:when test="${requestScope.asc == false}" >
-                <div class="btn-group" role="group">
-                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-primary">Asc</a>
-                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-outline-primary">Desc</a>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="btn-group" role="group">
-                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-outline-primary">Asc</a>
-                    <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-primary">Desc</a>
-                </div>
-            </c:otherwise>
-        </c:choose>
-
+        <c:if test="${requestScope.quotes.size() > 0}">
+            <c:choose>
+                <c:when test="${requestScope.asc == false}" >
+                    <div class="btn-group" role="group">
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-primary">Asc</a>
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-outline-primary">Desc</a>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="btn-group" role="group">
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-outline-primary">Asc</a>
+                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-primary">Desc</a>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
     </header>
 
     <c:choose>
         <c:when test="${requestScope.quotes.size() > 0}">
-            <div class="row text-center">
+            <div class="row">
                 <c:forEach var="quote" items="${requestScope.quotes}">
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">${quote.title}</h4>
-                                <p class="card-text">${quote.description}</p>
+                                <blockquote class="blockquote mb-0">
+                                    <p>${quote.text}</p>
+                                    <footer class="blockquote-footer">${quote.author} in <cite title="Source Title">${quote.source}</cite></footer>
+                                </blockquote>
+                                <p class="card-text"><small class="text-muted">Category: ${quote.category}</small>, <small class="text-muted">Date: ${quote.date}</small></p>
                             </div>
                             <div class="card-footer">
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-outline-primary">Edit</a>
+                                    <a href="<c:url value="/editQuote"><c:param name="id" value="${quote.id}" /></c:url>" class="btn btn-outline-primary">Edit</a>
                                     <a href="<c:url value="?${requestScope.cleanQuery}"><c:param name="del" value="${quote.id}" /></c:url>" class="btn btn-outline-danger"
                                             <c:if test="${sessionScope.confirmDelete != false}"> data-toggle="modal" data-target="#confirmDelete" </c:if>>Delete</a>
                                 </div>
@@ -83,7 +87,7 @@
             <div class="row text-center">
                 <div class="col-lg-8 mx-auto placeholder">
                     <h2>There is no quotes here!</h2>
-                    <p>Please generate some in the <a href="<c:url value="/configuration"/>">Configuration</a> section or add new "things" manually.
+                    <p>Please generate some in the <a href="<c:url value="/configuration"/>">Configuration</a> section or add new quotes manually.
                     </p>
                 </div>
             </div>

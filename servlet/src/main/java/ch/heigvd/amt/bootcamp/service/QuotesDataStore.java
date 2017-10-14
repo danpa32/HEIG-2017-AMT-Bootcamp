@@ -22,17 +22,37 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
             "Libere etiam studium ab exspectemus in non in ne ad absit sanciatur consilium studium semper.",
             "Ex offert sit atque statum sexus conductae nomine in in elegerit offert hastam diem conductae hastam est solvitur uterque ut."
         };
+
+        String[] sources = {
+                "CH", "USA", "BE", "UK"
+        };
         Random rand = new Random();
 
         this.quotes = new ArrayList<Quote>();
 
         for (int i = 1; i <= 200; i++) {
-            quotes.add(new Quote(i,i + "th", loremIpsum[rand.nextInt(loremIpsum.length)]));
+            quotes.add(new Quote(
+                    i,
+                    loremIpsum[rand.nextInt(loremIpsum.length)],
+                    "author " + i,
+                    rand.nextInt(500) + 1500,
+                    sources[rand.nextInt(sources.length)],
+                    Quote.CATEGORIES[rand.nextInt(Quote.CATEGORIES.length)]));
         }
     }
 
     @Override
     public List<Quote> getQuotes() {
         return quotes;
+    }
+
+    @Override
+    public Quote getQuote(int id) {
+        for(Quote q : getQuotes()) {
+            if(q.getId() == id) {
+                return q;
+            }
+        }
+        return null;
     }
 }

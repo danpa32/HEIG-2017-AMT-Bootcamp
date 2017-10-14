@@ -2,8 +2,26 @@ package ch.heigvd.amt.bootcamp.model;
 
 public class Quote {
     public static String[] CATEGORIES = {"Philosophy", "War", "Life"};
+
+    private int id;
+
+    private String text;
+    private String author;
+    private int date;
+    private String source;
+    private String category;
+
+    public Quote(int id, String text, String author, int date, String source, String category) {
+        this.id = id;
+        this.text = text;
+        this.author = author;
+        this.date = date;
+        this.source = source;
+        this.category = category;
+    }
+
     public enum FIELDS {
-        QUOTE, AUTHOR, DATE, SOURCE, CATEGORY
+        ID, QUOTE, AUTHOR, DATE, SOURCE, CATEGORY
     }
 
     public int getId() {
@@ -14,29 +32,23 @@ public class Quote {
         this.id = id;
     }
 
-    private int id;
-    private String title;
-    private String description;
-
-    public Quote(int id, String title, String description) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
+    public String getText() {
+        return text;
     }
 
-    public String getTitle() {
-        return title;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public int getDate() {
+        return date;
     }
 
-    public String getDescription() {
-        return description;
+    public String getSource() {
+        return source;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getCategory() {
+        return category;
     }
 }

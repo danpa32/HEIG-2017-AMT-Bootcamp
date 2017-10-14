@@ -8,4 +8,5 @@ import java.util.List;
 @Local
 public interface QuotesDataStoreLocal {
     List<Quote> getQuotes();
+    Quote getQuote(int id);
 }
