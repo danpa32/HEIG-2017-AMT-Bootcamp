@@ -45,4 +45,12 @@
         </div>
     </nav>
 
+    <c:set var="alert" value="${requestScope.alert}" />
+    <c:if test="${alert != null}" >
+        <div class="alert alert-${alert.level}" role="alert">
+            <h4 class="alert-heading mt-4">${alert.title}</h4>
+            <p>${alert.message}</p>
+        </div>
+    </c:if>
+
 

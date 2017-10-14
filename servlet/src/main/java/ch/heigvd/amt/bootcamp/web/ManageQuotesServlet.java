@@ -1,5 +1,6 @@
 package ch.heigvd.amt.bootcamp.web;
 
+import ch.heigvd.amt.bootcamp.model.Alert;
 import ch.heigvd.amt.bootcamp.service.QuotesManager;
 import ch.heigvd.amt.bootcamp.service.QuotesManagerLocal;
 
@@ -34,6 +35,9 @@ public class ManageQuotesServlet extends HttpServlet {
         if(confirmParam != null) {
             request.getSession().setAttribute("confirmDelete", !confirmParam.equals("0"));
         }
+
+        // Alert
+        request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Some alert title", "An alert message."));
 
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
     }
