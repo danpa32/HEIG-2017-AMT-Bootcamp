@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +90,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
             j++;
 
             preparedStatement.addBatch();
-            if (j%1000 == 0 || j == n - 1) {
+            if (j%1000 == 0 || j == n) {
                 preparedStatement.executeBatch();
             }
         }
@@ -97,19 +98,76 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         connection.close();
     }
 
-    /* TO DO CONNECTION WITH DATABASE */
     @Override
-    public List<Quote> getQuotes() {
-        return quotes;
+    public void deleteQuote(int id) throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM quote WHERE id = ?;");
+        preparedStatement.setInt(1, id);
+        preparedStatement.execute();
+        connection.close();
     }
 
     @Override
-    public Quote getQuote(int id) {
-        for(Quote q : getQuotes()) {
+    public void editQuote(Quote q) throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE quote SET quote = ?, author = ?, date = ?, source = ?, category = ? WHERE id = ?;");
+        preparedStatement.setString(1, q.getText());
+        preparedStatement.setString(2, q.getAuthor());
+        preparedStatement.setInt(3, q.getDate());
+        preparedStatement.setString(4, q.getSource());
+        preparedStatement.setString(5, q.getCategory());
+        preparedStatement.setInt(6, q.getId());
+        preparedStatement.execute();
+        connection.close();
+    }
+
+    @Override
+    public void addQuote(Quote q) throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO quote (quote, author, date, source, category) VALUES (?, ?, ?, ?, ?);");
+        preparedStatement.setString(1, q.getText());
+        preparedStatement.setString(2, q.getAuthor());
+        if (q.getDate() == null) {
+            preparedStatement.setInt(3, java.sql.Types.INTEGER);
+        } else {
+            preparedStatement.setInt(3, q.getDate());
+        }
+        preparedStatement.setString(4, q.getSource());
+        preparedStatement.setString(5, q.getCategory());
+        preparedStatement.execute();
+        connection.close();
+    }
+
+    @Override
+    public List<Quote> getAllQuotes() throws SQLException {
+        List<Quote> allQuotes = new ArrayList<>();
+
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM quote;");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String quote = resultSet.getString("quote");
+            String author = resultSet.getString("author");
+            int date = resultSet.getInt("date");
+            String source = resultSet.getString("source");
+            String category = resultSet.getString("category");
+            allQuotes.add(new Quote(id, quote, author, date, source, category));
+        }
+        connection.close();
+
+        return allQuotes;
+    }
+
+    @Override
+    public Quote getQuote(int id) throws SQLException {
+        for(Quote q : getAllQuotes()) {
             if(q.getId() == id) {
                 return q;
             }
         }
         return null;
     }
+
+
 }

@@ -36,7 +36,13 @@ public class ManageQuotesServlet extends HttpServlet {
         if(delParam != null) {
             try {
                 int delId = Integer.parseInt(delParam);
+                boolean success = quotesManager.deleteQuote(delId);
 
+                if (success) {
+                    request.setAttribute("alert", new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully deleted."));
+                } else {
+                    request.setAttribute("alert", new Alert(Alert.Level.WARNING, "Failed", "The deletion of the quote has failed."));
+                }
 
             } catch (NumberFormatException nfe) {
                 request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Unparseable parameter", "The delete parameter is not an integer."));
@@ -67,8 +73,6 @@ public class ManageQuotesServlet extends HttpServlet {
         List quotes = quotesManager.getAllQuotes();
 
         request.setAttribute("quotes", quotes);
-
-        request.setAttribute("alert", new Alert(Alert.Level.PRIMARY, "Some alert", "With more information."));
 
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
     }

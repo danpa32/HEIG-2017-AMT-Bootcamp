@@ -7,11 +7,11 @@ public class Quote {
 
     private String text;
     private String author;
-    private int date;
+    private Integer date;
     private String source;
     private String category;
 
-    public Quote(int id, String text, String author, int date, String source, String category) {
+    public Quote(int id, String text, String author, Integer date, String source, String category) {
         this.id = id;
         this.text = text;
         this.author = author;
@@ -40,7 +40,7 @@ public class Quote {
         return author;
     }
 
-    public int getDate() {
+    public Integer getDate() {
         return date;
     }
 

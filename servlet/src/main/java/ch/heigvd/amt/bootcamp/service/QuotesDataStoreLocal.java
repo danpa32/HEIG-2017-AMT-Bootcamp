@@ -8,7 +8,10 @@ import java.util.List;
 
 @Local
 public interface QuotesDataStoreLocal {
-    List<Quote> getQuotes();
-    Quote getQuote(int id);
+    List<Quote> getAllQuotes() throws SQLException;
+    Quote getQuote(int id) throws SQLException;
     void generateQuotes(int n) throws SQLException;
+    void deleteQuote(int id) throws SQLException;
+    void editQuote(Quote q) throws SQLException;
+    void addQuote(Quote q) throws SQLException;
 }

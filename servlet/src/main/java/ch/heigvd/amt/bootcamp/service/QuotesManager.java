@@ -17,23 +17,68 @@ public class QuotesManager implements QuotesManagerLocal {
 
     @Override
     public List<Quote> getAllQuotes() {
-        return quotesDataStore.getQuotes();
+        try {
+            return quotesDataStore.getAllQuotes();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc) {
+
         return null;
     }
 
     @Override
     public Quote getQuote(int id) {
-        return quotesDataStore.getQuote(id);
+        try {
+            return quotesDataStore.getQuote(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public boolean generateQuotes(int n) {
         try {
             quotesDataStore.generateQuotes(n);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteQuote(int id) {
+        try {
+            quotesDataStore.deleteQuote(id);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    @Override
+    public boolean editQuote(Quote q) {
+        try {
+            quotesDataStore.editQuote(q);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean addQuote(Quote q) {
+        try {
+            quotesDataStore.addQuote(q);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
