@@ -1,6 +1,7 @@
 package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
+import ch.heigvd.amt.bootcamp.model.Quote;
 import ch.heigvd.amt.bootcamp.service.AlertManagerLocal;
 import ch.heigvd.amt.bootcamp.service.QuotesManagerLocal;
 
@@ -36,6 +37,7 @@ public class ManageQuotesServlet extends HttpServlet {
             request.getSession().setAttribute("confirmDelete", !confirmParam.equals("0"));
         }
 
+        // Deletion of a quote
         String delParam = request.getParameter("del");
         if(delParam != null) {
             try {
@@ -60,6 +62,18 @@ public class ManageQuotesServlet extends HttpServlet {
             asc = !ascParam.equals("0");
         }
         request.setAttribute("asc", asc);
+
+        // Sort
+        String sortParam = request.getParameter("sort");
+        String sortBy = "id";
+        if(sortParam != null) {
+            try {
+                Quote.FIELDS.valueOf(sortParam);
+                sortBy = sortParam.toLowerCase();
+            } catch (IllegalArgumentException iae) {
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The sort parameter \"" + sortParam + "\" is not valid."));
+            }
+        }
 
         // Pagination
         String pageParam = request.getParameter("page");
