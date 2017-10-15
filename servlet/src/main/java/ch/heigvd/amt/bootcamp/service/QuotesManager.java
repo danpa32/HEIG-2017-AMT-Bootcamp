@@ -74,6 +74,17 @@ public class QuotesManager implements QuotesManagerLocal {
     }
 
     @Override
+    public boolean deleteAllQuotes() {
+        try {
+            quotesDataStore.deleteAllQuotes();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public boolean editQuote(Quote q) {
         try {
             quotesDataStore.editQuote(q);

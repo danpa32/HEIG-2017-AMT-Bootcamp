@@ -13,6 +13,7 @@ public interface QuotesManagerLocal {
     Quote getQuote(int id);
     boolean generateQuotes(int n);
     boolean deleteQuote(int id);
+    boolean deleteAllQuotes();
     boolean editQuote(Quote q);
     boolean addQuote(Quote q);
     int getNbQuotes();

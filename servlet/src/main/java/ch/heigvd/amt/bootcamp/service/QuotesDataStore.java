@@ -27,8 +27,6 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
     @Resource(lookup = "java:/quotes")
     private DataSource dataSource;
 
-
-
     private JsonArray quoteAndAuthor;
 
     private List<String> countries;
@@ -98,6 +96,14 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM quote WHERE id = ?;");
         preparedStatement.setInt(1, id);
+        preparedStatement.execute();
+        connection.close();
+    }
+
+    @Override
+    public void deleteAllQuotes() throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM quote;");
         preparedStatement.execute();
         connection.close();
     }
