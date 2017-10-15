@@ -1,12 +1,23 @@
-<%-- 
-The purpose of this page is to redirect users who are trying to access the
-following URL: http://localhost:8080/MVCDemo/. Because we have decided that all
-of our pages would be available under the /pages/ prefix, we redict them to
-/pages/home. If we were not doing that, users would get a 404.
-
-Notice that we use the Java Standard Tag Library for implementing the redirection.
-This is one of the methods available to us.
+<%--
+  Created by IntelliJ IDEA.
+  User: daniel
+  Date: 12.10.17
+  Time: 09:11
+  To change this template use File | Settings | File Templates.
 --%>
+<%@include file="WEB-INF/pages/includes/header.jsp"%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
-<c:redirect url="/home"/>
+<div class="container">
+
+    <!-- Jumbotron Header -->
+    <header class="jumbotron my-4 text-center">
+        <h1 class="display-3">Welcome</h1>
+        <p class="lead">
+            <a href="<c:url value="/manage_quotes"/>" class="btn btn-primary btn-lg">Manage Quotes</a>
+            <a href="<c:url value="/configuration"/>" class="btn btn-primary btn-lg">Configuration</a>
+        </p>
+    </header>
+
+</div>
+
+<%@include file="WEB-INF/pages/includes/footer.jsp"%>
