@@ -53,7 +53,7 @@
                             <div class="card-body">
                                 <blockquote class="blockquote mb-0">
                                     <p>${quote.text}</p>
-                                    <footer class="blockquote-footer">${quote.author} in <cite title="Source Title">${quote.source}</cite>, ${quote.date}</footer>
+                                    <footer class="blockquote-footer">${quote.author}<c:if test="${not empty quote.source}" > in <cite title="Source Title">${quote.source}</cite></c:if>, ${quote.date}</footer>
                                 </blockquote>
                                 <p class="card-text"><small class="text-muted">Category: ${quote.category}</small></p>
                             </div>
