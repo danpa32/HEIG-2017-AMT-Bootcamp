@@ -44,6 +44,6 @@
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
-        <a href="<c:url value="/manage_quotes" />" class="btn btn-outline">Cancel</a>
+        <a href="<c:url value="/manage_quotes" />" class="btn btn-outline">Return</a>
     </fieldset>
 </form>

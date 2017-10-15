@@ -39,10 +39,16 @@ public class EditQuoteServlet extends HttpServlet {
 
         }
 
+        specifyQuote(request);
         request.getRequestDispatcher("/WEB-INF/pages/editQuote.jsp").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        specifyQuote(request);
+        request.getRequestDispatcher("/WEB-INF/pages/editQuote.jsp").forward(request, response);
+    }
+
+    private void specifyQuote(HttpServletRequest request) {
         boolean quoteSpecified = false;
         String quoteId = request.getParameter("id");
         if(quoteId != null) {
@@ -53,7 +59,5 @@ public class EditQuoteServlet extends HttpServlet {
         }
 
         request.setAttribute("quoteSpecified", quoteSpecified);
-
-        request.getRequestDispatcher("/WEB-INF/pages/editQuote.jsp").forward(request, response);
     }
 }
