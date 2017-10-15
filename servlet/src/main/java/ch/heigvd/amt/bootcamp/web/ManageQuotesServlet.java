@@ -28,6 +28,8 @@ public class ManageQuotesServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final int NB_QUOTES_PER_PAGE = 32;
+
         // QueryString for options links
         setSanitizedURL(request);
 
@@ -86,10 +88,10 @@ public class ManageQuotesServlet extends HttpServlet {
                 alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The page parameter is not an integer."));
             }
         }
-        setPaginationAttributes(request, currentPage, 45);
+        setPaginationAttributes(request, currentPage, ((quotesManager.getNbQuotes() - 1) / NB_QUOTES_PER_PAGE) + 1);
 
         // Recuperate the page of quote
-        List quotes = quotesManager.getAllQuotes();
+        List quotes = quotesManager.getPageOfQuotes(currentPage, NB_QUOTES_PER_PAGE, sortBy, asc);
 
         request.setAttribute("quotes", quotes);
 

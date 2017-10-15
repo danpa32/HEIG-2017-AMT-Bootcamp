@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS quote (
 	quote TEXT NOT NULL,
 	author VARCHAR(50),
 	date INT,
-	source VARCHAR(40),
-	category VARCHAR(30),
+	source VARCHAR(50),
+	category VARCHAR(50),
 	PRIMARY KEY (id)
-);
+) DEFAULT CHARACTER SET utf8;

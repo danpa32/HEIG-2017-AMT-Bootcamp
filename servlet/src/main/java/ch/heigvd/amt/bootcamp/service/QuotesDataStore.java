@@ -13,10 +13,7 @@ import javax.ejb.Startup;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,15 +25,15 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
     @Resource(lookup = "java:/quotes")
     private DataSource dataSource;
 
-    private List<Quote> quotes;
+
 
     private JsonArray quoteAndAuthor;
     private List<String> countries;
+
     private List<String> categories;
 
     @PostConstruct
     void init() {
-        this.quotes = new ArrayList<>();
         countries = new ArrayList<>();
         categories = new ArrayList<>();
 
@@ -59,7 +56,12 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         }
     }
 
+    public List<String> getCategories() {
+        return categories;
+    }
+
     public void generateQuotes(int n) throws SQLException {
+        List<Quote> quotes = new ArrayList<>();
         int idCount = 0;
         Random random = new Random();
 
@@ -92,6 +94,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
             preparedStatement.addBatch();
             if (j%1000 == 0 || j == n) {
                 preparedStatement.executeBatch();
+                preparedStatement.clearBatch();
             }
         }
 
@@ -113,7 +116,11 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE quote SET quote = ?, author = ?, date = ?, source = ?, category = ? WHERE id = ?;");
         preparedStatement.setString(1, q.getText());
         preparedStatement.setString(2, q.getAuthor());
-        preparedStatement.setInt(3, q.getDate());
+        if (q.getDate() == null) {
+            preparedStatement.setNull(3, Types.INTEGER);
+        } else {
+            preparedStatement.setInt(3, q.getDate());
+        }
         preparedStatement.setString(4, q.getSource());
         preparedStatement.setString(5, q.getCategory());
         preparedStatement.setInt(6, q.getId());
@@ -128,7 +135,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         preparedStatement.setString(1, q.getText());
         preparedStatement.setString(2, q.getAuthor());
         if (q.getDate() == null) {
-            preparedStatement.setInt(3, java.sql.Types.INTEGER);
+            preparedStatement.setNull(3, Types.INTEGER);
         } else {
             preparedStatement.setInt(3, q.getDate());
         }
@@ -136,6 +143,54 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         preparedStatement.setString(5, q.getCategory());
         preparedStatement.execute();
         connection.close();
+    }
+
+    @Override
+    public List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc) throws SQLException {
+        List<Quote> quotesOfPageX = new ArrayList<>();
+        int offset = (page - 1) * perPage;
+        Connection connection = dataSource.getConnection();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT * FROM quote ");
+        sb.append(" ORDER BY ");
+        sb.append(sortBy);
+        sb.append(" ");
+        if (asc) {
+            sb.append(" ASC ");
+        } else {
+            sb.append(" DESC ");
+        }
+        sb.append("LIMIT ");
+        sb.append(perPage);
+        sb.append(" OFFSET ");
+        sb.append(offset);
+        sb.append(";");
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sb.toString());
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String quote = resultSet.getString("quote");
+            String author = resultSet.getString("author");
+            Integer date = (Integer) resultSet.getObject("date");
+            String source = resultSet.getString("source");
+            String category = resultSet.getString("category");
+            quotesOfPageX.add(new Quote(id, quote, author, date, source, category));
+        }
+        connection.close();
+
+        return quotesOfPageX;
+    }
+
+    @Override
+    public int getNbQuotes() throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(id) AS total FROM quote;");
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        int size = resultSet.getInt("total");
+        connection.close();
+        return size;
     }
 
     @Override
@@ -149,7 +204,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
             int id = resultSet.getInt("id");
             String quote = resultSet.getString("quote");
             String author = resultSet.getString("author");
-            int date = resultSet.getInt("date");
+            Integer date = (Integer) resultSet.getObject("date");
             String source = resultSet.getString("source");
             String category = resultSet.getString("category");
             allQuotes.add(new Quote(id, quote, author, date, source, category));
@@ -161,12 +216,25 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
 
     @Override
     public Quote getQuote(int id) throws SQLException {
-        for(Quote q : getAllQuotes()) {
-            if(q.getId() == id) {
-                return q;
-            }
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM quote WHERE id = ?;");
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        boolean hasQuote = resultSet.next();
+
+        Quote q = null;
+        if(hasQuote) {
+            String quote = resultSet.getString("quote");
+            String author = resultSet.getString("author");
+            Integer date = (Integer) resultSet.getObject("date");
+            String source = resultSet.getString("source");
+            String category = resultSet.getString("category");
+            q = new Quote(id, quote, author, date, source, category);
         }
-        return null;
+
+        connection.close();
+
+        return q;
     }
 
 

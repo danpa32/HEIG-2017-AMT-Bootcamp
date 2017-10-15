@@ -27,8 +27,12 @@ public class QuotesManager implements QuotesManagerLocal {
 
     @Override
     public List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc) {
-
-        return null;
+        try {
+            return quotesDataStore.getPageOfQuotes(page, perPage, sortBy, asc);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -85,4 +89,16 @@ public class QuotesManager implements QuotesManagerLocal {
             return false;
         }
     }
+
+    @Override
+    public int getNbQuotes() {
+        try {
+            return quotesDataStore.getNbQuotes();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+
 }

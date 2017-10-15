@@ -14,4 +14,5 @@ public interface QuotesManagerLocal {
     boolean deleteQuote(int id);
     boolean editQuote(Quote q);
     boolean addQuote(Quote q);
+    int getNbQuotes();
 }
