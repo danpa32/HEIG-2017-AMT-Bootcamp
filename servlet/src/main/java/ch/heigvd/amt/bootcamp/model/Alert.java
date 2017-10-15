@@ -2,7 +2,7 @@ package ch.heigvd.amt.bootcamp.model;
 
 public class Alert {
     public enum Level {
-        PRIMARY, SECONDARY, SUCCESS, DANGER, WARNING, INFO, LIGHT, DARK
+        DANGER, SUCCESS, WARNING, PRIMARY, SECONDARY, INFO, LIGHT, DARK
     }
 
     public Alert(Level level, String title, String message) {
@@ -13,6 +13,10 @@ public class Alert {
 
     public String getLevel() {
         return level.toString().toLowerCase();
+    }
+
+    public Level getLevelEnum() {
+        return level;
     }
 
     public String getTitle() {

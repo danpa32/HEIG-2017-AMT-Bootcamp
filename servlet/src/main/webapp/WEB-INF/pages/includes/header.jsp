@@ -45,11 +45,37 @@
         </div>
     </nav>
 
-    <c:set var="alert" value="${requestScope.alert}" />
-    <c:if test="${alert != null}" >
-        <div class="alert alert-${alert.level}" role="alert">
-            <h4 class="alert-heading mt-4">${alert.title}</h4>
-            <p>${alert.message}</p>
+    <c:set var="alerts" value="${requestScope.alerts}" />
+    <c:if test="${alerts != null}" >
+        <div id="alertCarousel" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <c:forEach var="alertIndic" items="${alerts}" varStatus="statIndic">
+                    <li class="bg-${alertIndic.level}"
+                    data-target="#alertCarousel"
+                    data-slide-to="${statIndic.index}"
+                    <c:if test="${statIndic.first}" >class="active"</c:if> ></li>
+                </c:forEach>
+            </ol>
+            <div class="carousel-inner">
+                <c:forEach var="alert" items="${alerts}" varStatus="stat">
+                    <div class="carousel-item <c:if test="${stat.first}" >active</c:if>">
+                        <div class="alert alert-${alert.level}" role="alert">
+                            <div class="container">
+                                <h4 class="alert-heading mt-4">${alert.title}</h4>
+                                <p>${alert.message}</p>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+            <a class="carousel-control-prev" href="#alertCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#alertCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
     </c:if>
 

@@ -1,6 +1,7 @@
 package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
+import ch.heigvd.amt.bootcamp.service.AlertManagerLocal;
 import ch.heigvd.amt.bootcamp.service.QuotesManagerLocal;
 
 import javax.ejb.EJB;
@@ -17,6 +18,9 @@ public class ManageQuotesServlet extends HttpServlet {
 
     @EJB
     QuotesManagerLocal quotesManager;
+
+    @EJB
+    AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -39,13 +43,13 @@ public class ManageQuotesServlet extends HttpServlet {
                 boolean success = quotesManager.deleteQuote(delId);
 
                 if (success) {
-                    request.setAttribute("alert", new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully deleted."));
+                    alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully deleted."));
                 } else {
-                    request.setAttribute("alert", new Alert(Alert.Level.WARNING, "Failed", "The deletion of the quote has failed."));
+                    alertManager.add(request, new Alert(Alert.Level.WARNING, "Failed", "The deletion of the quote has failed."));
                 }
 
             } catch (NumberFormatException nfe) {
-                request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Unparseable parameter", "The delete parameter is not an integer."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The delete parameter is not an integer."));
             }
         }
 
@@ -64,7 +68,7 @@ public class ManageQuotesServlet extends HttpServlet {
             try {
                 currentPage = Integer.parseInt(pageParam);
             } catch (NumberFormatException nfe) {
-                request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Unparseable parameter", "The page parameter is not an integer."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The page parameter is not an integer."));
             }
         }
         setPaginationAttributes(request, currentPage, 45);

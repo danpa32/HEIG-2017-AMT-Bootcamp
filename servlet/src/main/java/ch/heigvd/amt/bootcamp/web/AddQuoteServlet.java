@@ -2,6 +2,7 @@ package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
 import ch.heigvd.amt.bootcamp.model.Quote;
+import ch.heigvd.amt.bootcamp.service.AlertManagerLocal;
 import ch.heigvd.amt.bootcamp.service.QuotesManagerLocal;
 
 import javax.ejb.EJB;
@@ -17,6 +18,9 @@ public class AddQuoteServlet extends HttpServlet {
     @EJB
     QuotesManagerLocal quotesManager;
 
+    @EJB
+    AlertManagerLocal alertManager;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Integer date = null;
         String dateParam = request.getParameter("date");
@@ -24,7 +28,7 @@ public class AddQuoteServlet extends HttpServlet {
             try {
                 date = Integer.parseInt(dateParam);
             } catch (NumberFormatException nfe){
-                request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Unparseable parameter", "The date is not a number."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The date is not a number."));
             }
         }
 
@@ -43,9 +47,9 @@ public class AddQuoteServlet extends HttpServlet {
         ));
 
         if (success) {
-            request.setAttribute("alert", new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully added."));
+            alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully added."));
         } else {
-            request.setAttribute("alert", new Alert(Alert.Level.WARNING, "Failed", "The insertion of the quote has failed."));
+            alertManager.add(request, new Alert(Alert.Level.WARNING, "Failed", "The insertion of the quote has failed."));
         }
 
         request.getRequestDispatcher("/WEB-INF/pages/addQuote.jsp").forward(request, response);

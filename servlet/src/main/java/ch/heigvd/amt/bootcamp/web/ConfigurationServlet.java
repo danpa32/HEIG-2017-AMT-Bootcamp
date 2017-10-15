@@ -1,6 +1,7 @@
 package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
+import ch.heigvd.amt.bootcamp.service.AlertManagerLocal;
 import ch.heigvd.amt.bootcamp.service.QuotesManagerLocal;
 
 import javax.ejb.EJB;
@@ -17,6 +18,9 @@ public class ConfigurationServlet extends HttpServlet {
     @EJB
     QuotesManagerLocal quotesManager;
 
+    @EJB
+    AlertManagerLocal alertManager;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String nbThingParam = request.getParameter("nbThings");
         if (nbThingParam != null) {
@@ -26,17 +30,17 @@ public class ConfigurationServlet extends HttpServlet {
                 boolean success = quotesManager.generateQuotes(nbThings);
 
                 if (success) {
-                    request.setAttribute("alert", new Alert(Alert.Level.SUCCESS, "Success", "The generation of " + nbThings + " quotes has succeeded"));
+                    alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The generation of " + nbThings + " quotes has succeeded"));
                 } else {
-                    request.setAttribute("alert", new Alert(Alert.Level.WARNING, "Failed", "The generation of " + nbThings + " quotes has failed"));
+                    alertManager.add(request, new Alert(Alert.Level.WARNING, "Failed", "The generation of " + nbThings + " quotes has failed"));
                 }
 
                 request.setAttribute("nbGeneratedQuotes", request.getParameter("nbGeneratedQuotes"));
             } catch (NumberFormatException nfe) {
-                request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Incorrect parameter", "Couldn't parse parameter"));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Incorrect parameter", "Couldn't parse parameter"));
             }
         } else {
-            request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Missing parameter", "Couldn't find the number of quotes to generate"));
+            alertManager.add(request, new Alert(Alert.Level.DANGER, "Missing parameter", "Couldn't find the number of quotes to generate"));
         }
 
         request.getRequestDispatcher("/WEB-INF/pages/configuration.jsp").forward(request, response);
