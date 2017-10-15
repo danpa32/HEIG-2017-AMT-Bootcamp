@@ -16,12 +16,12 @@ Docker compose will build the different docker container needed for the applicat
 
 ### Steps
 
-* 1) You need to place yourself in the *servlet* folder and execute `docker-compose up --build`
+1. You need to place yourself in the *servlet* folder and execute `docker-compose up --build`
 in a terminal.
-* 2) Open a web browser like [Mozilla Firefox](https://www.mozilla.org/en-US/firefox/new/)
-* 3) Access to the different structure deployed :
-    * a) The application : http://{ip docker}:9090/Bootcamp-1.0-SNAPSHOT/home
-    * b) Wildfly administration console : http://{ip docker}:9990 , user/password : admin/admin
+2. Open a web browser like [Mozilla Firefox](https://www.mozilla.org/en-US/firefox/new/)
+3. Access to the different deployed structure :
+    * The application : http://{ip docker}:9090/Bootcamp-1.0-SNAPSHOT/home
+    * Wildfly administration console : http://{ip docker}:9990 , user/password : admin/admin
 
 ## Authors
 
