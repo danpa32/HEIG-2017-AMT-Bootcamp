@@ -16,20 +16,26 @@ import java.io.IOException;
 @WebServlet(name = "AddQuoteServlet", urlPatterns = {"/addQuote"})
 public class AddQuoteServlet extends HttpServlet {
     @EJB
+    private
     QuotesManagerLocal quotesManager;
 
     @EJB
+    private
     AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Quote q = quotesManager.extractQuote(request);
+        try {
+            Quote q = quotesManager.extractQuote(request);
 
-        boolean success = quotesManager.addQuote(q);
+            boolean success = quotesManager.addQuote(q);
 
-        if (success) {
-            alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully added."));
-        } else {
-            alertManager.add(request, new Alert(Alert.Level.WARNING, "Failed", "The insertion of the quote has failed."));
+            if (success) {
+                alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully added."));
+            } else {
+                alertManager.add(request, new Alert(Alert.Level.WARNING, "Failed", "The insertion of the quote has failed."));
+            }
+        } catch (IllegalArgumentException iae) {
+
         }
 
         request.getRequestDispatcher("/WEB-INF/pages/addQuote.jsp").forward(request, response);

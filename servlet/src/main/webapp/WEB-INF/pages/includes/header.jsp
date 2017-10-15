@@ -52,7 +52,7 @@
                 <c:forEach var="alertIndic" items="${alerts}" varStatus="stat">
                     <li class="bg-${alertIndic.level} <c:if test="${stat.first}" >active</c:if>"
                     data-target="#alertCarousel"
-                    data-slide-to="${statIndic.index}" ></li>
+                    data-slide-to="${stat.index}" ></li>
                 </c:forEach>
             </ol>
             <div class="carousel-inner">

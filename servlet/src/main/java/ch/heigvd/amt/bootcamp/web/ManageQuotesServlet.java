@@ -18,9 +18,11 @@ import java.util.List;
 public class ManageQuotesServlet extends HttpServlet {
 
     @EJB
+    private
     QuotesManagerLocal quotesManager;
 
     @EJB
+    private
     AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

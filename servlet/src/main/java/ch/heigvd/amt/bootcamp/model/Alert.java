@@ -27,7 +27,7 @@ public class Alert {
         return message;
     }
 
-    private Level level;
-    private String title;
-    private String message;
+    private final Level level;
+    private final String title;
+    private final String message;
 }

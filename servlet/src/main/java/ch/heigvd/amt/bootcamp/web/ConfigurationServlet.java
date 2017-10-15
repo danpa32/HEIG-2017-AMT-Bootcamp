@@ -16,9 +16,11 @@ import java.io.IOException;
 public class ConfigurationServlet extends HttpServlet {
 
     @EJB
+    private
     QuotesManagerLocal quotesManager;
 
     @EJB
+    private
     AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,8 +52,11 @@ public class ConfigurationServlet extends HttpServlet {
                 case "del":
                     String delConfParam = request.getParameter("confDelete");
                     if(delConfParam != null && delConfParam.equals("on")) {
-                        quotesManager.deleteAllQuotes();
-                        alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The deletions of all quotes has succeeded."));
+                        if(quotesManager.deleteAllQuotes()) {
+                            alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The deletions of all quotes has succeeded."));
+                        } else {
+                            alertManager.add(request, new Alert(Alert.Level.WARNING, "Failure", "The deletions of all quotes has failed."));
+                        }
                     } else {
                         alertManager.add(request, new Alert(Alert.Level.WARNING, "Missing confirmation", "You must check the confirmation checkbox to delete all quotes."));
                     }

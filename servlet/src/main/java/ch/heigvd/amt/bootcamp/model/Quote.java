@@ -5,13 +5,12 @@ public class Quote {
     public final static String DEFAULT_AUTHOR = "Unknown";
 
 
-    private int id;
-
-    private String text;
-    private String author;
-    private Integer date;
-    private String source;
-    private String category;
+    private final int id;
+    private final String text;
+    private final String author;
+    private final Integer date;
+    private final String source;
+    private final String category;
 
     public Quote(int id, String text, String author, Integer date, String source, String category) {
         this.id = id;
@@ -23,15 +22,11 @@ public class Quote {
     }
 
     public enum FIELDS {
-        ID, QUOTE, AUTHOR, DATE, SOURCE, CATEGORY;
+        ID, QUOTE, AUTHOR, DATE, SOURCE, CATEGORY
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getText() {

@@ -4,31 +4,20 @@ import ch.heigvd.amt.bootcamp.model.Alert;
 import ch.heigvd.amt.bootcamp.model.Quote;
 
 import javax.ejb.EJB;
-import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Stateless
 public class QuotesManager implements QuotesManagerLocal {
     @EJB
+    private
     QuotesDataStoreLocal quotesDataStore;
 
     @EJB
+    private
     AlertManagerLocal alertManager;
-
-    @Override
-    public List<Quote> getAllQuotes() {
-        try {
-            return quotesDataStore.getAllQuotes();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     @Override
     public List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc) {
@@ -132,7 +121,8 @@ public class QuotesManager implements QuotesManagerLocal {
         // Quote
         String quoteParam = request.getParameter("quote");
         if(quoteParam == null) {
-            // Exception ?
+            alertManager.add(request, new Alert(Alert.Level.DANGER, "Missing parameter", "The quote content parameter is required."));
+            throw new IllegalArgumentException("The quote parameter is required");
         }
 
         // Author
@@ -154,18 +144,17 @@ public class QuotesManager implements QuotesManagerLocal {
 
         // Source
         String sourceParam = request.getParameter("source");
-        if(quoteParam == null) {
-            // Exception ?
+        if(sourceParam == null) {
+            sourceParam = "";
         }
 
         // Category
         String categoryParam = request.getParameter("category");
-        if(quoteParam == null || quoteParam.isEmpty()) {
+        if(categoryParam == null || categoryParam.isEmpty()) {
             categoryParam = Quote.DEFAULT_CATEGORY;
         }
 
-
-        Quote q = new Quote(
+        return new Quote(
                 id,
                 quoteParam,
                 authorParam,
@@ -173,8 +162,6 @@ public class QuotesManager implements QuotesManagerLocal {
                 sourceParam,
                 categoryParam
         );
-
-        return q;
     }
 
     @Override

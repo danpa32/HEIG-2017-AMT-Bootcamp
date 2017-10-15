@@ -7,8 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Local
-public interface QuotesDataStoreLocal {
-    List<Quote> getAllQuotes() throws SQLException;
+interface QuotesDataStoreLocal {
     Quote getQuote(int id) throws SQLException;
     void generateQuotes(int n) throws SQLException;
     void deleteQuote(int id) throws SQLException;

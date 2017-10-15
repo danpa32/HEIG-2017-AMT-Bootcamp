@@ -10,6 +10,7 @@ import java.io.IOException;
 @WebFilter(filterName = "CategoriesFilter", urlPatterns = {"/editQuote", "/addQuote"})
 public class CategoriesFilter implements Filter {
     @EJB
+    private
     QuotesManagerLocal quotesManager;
 
     public void destroy() {
