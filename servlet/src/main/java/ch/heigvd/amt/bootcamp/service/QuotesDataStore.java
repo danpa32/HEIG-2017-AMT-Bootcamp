@@ -1,6 +1,7 @@
 package ch.heigvd.amt.bootcamp.service;
 
 import ch.heigvd.amt.bootcamp.model.Quote;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -13,6 +14,7 @@ import javax.ejb.Startup;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,30 +30,24 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
 
 
     private JsonArray quoteAndAuthor;
-    private List<String> countries;
 
+    private List<String> countries;
     private List<String> categories;
 
     @PostConstruct
     void init() {
+        quoteAndAuthor = getJsonArrayResource("/quotes.json");
+        JsonArray jCountries = getJsonArrayResource("/countries.json");
+        JsonArray jCategories = getJsonArrayResource("/categories.json");
+
         countries = new ArrayList<>();
-        categories = new ArrayList<>();
-
-        InputStream isQuotes = getClass().getClassLoader().getResourceAsStream("/quotes.json");
-        BufferedReader brQuotes = new BufferedReader(new InputStreamReader(isQuotes));
-        quoteAndAuthor = new JsonParser().parse(brQuotes).getAsJsonArray();
-
-        InputStream isCountries = getClass().getClassLoader().getResourceAsStream("/countries.json");
-        BufferedReader brCountries = new BufferedReader(new InputStreamReader(isCountries));
-        JsonArray jCountries = new JsonParser().parse(brCountries).getAsJsonArray();
-        for (JsonElement elem : jCountries) {
+        for(JsonElement elem : jCountries) {
             countries.add(elem.getAsJsonObject().get("name").getAsString());
         }
 
-        InputStream isCategories = getClass().getClassLoader().getResourceAsStream("/categories.json");
-        BufferedReader brCategories = new BufferedReader(new InputStreamReader(isCategories));
-        JsonArray jCategories = new JsonParser().parse(brCategories).getAsJsonArray();
-        for (JsonElement elem : jCategories) {
+        categories = new ArrayList<>();
+        categories.add(Quote.DEFAULT_CATEGORY);
+        for(JsonElement elem : jCategories) {
             categories.add(elem.getAsString());
         }
     }
@@ -83,11 +79,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
 
         int j = 0;
         for (Quote curr : quotes) {
-            preparedStatement.setString(1, curr.getText());
-            preparedStatement.setString(2, curr.getAuthor());
-            preparedStatement.setInt(3, curr.getDate());
-            preparedStatement.setString(4, curr.getSource());
-            preparedStatement.setString(5, curr.getCategory());
+            prepareStatementWithQuote(preparedStatement, curr);
 
             j++;
 
@@ -114,15 +106,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
     public void editQuote(Quote q) throws SQLException {
         Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE quote SET quote = ?, author = ?, date = ?, source = ?, category = ? WHERE id = ?;");
-        preparedStatement.setString(1, q.getText());
-        preparedStatement.setString(2, q.getAuthor());
-        if (q.getDate() == null) {
-            preparedStatement.setNull(3, Types.INTEGER);
-        } else {
-            preparedStatement.setInt(3, q.getDate());
-        }
-        preparedStatement.setString(4, q.getSource());
-        preparedStatement.setString(5, q.getCategory());
+        prepareStatementWithQuote(preparedStatement, q);
         preparedStatement.setInt(6, q.getId());
         preparedStatement.execute();
         connection.close();
@@ -132,54 +116,31 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
     public void addQuote(Quote q) throws SQLException {
         Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO quote (quote, author, date, source, category) VALUES (?, ?, ?, ?, ?);");
-        preparedStatement.setString(1, q.getText());
-        preparedStatement.setString(2, q.getAuthor());
-        if (q.getDate() == null) {
-            preparedStatement.setNull(3, Types.INTEGER);
-        } else {
-            preparedStatement.setInt(3, q.getDate());
-        }
-        preparedStatement.setString(4, q.getSource());
-        preparedStatement.setString(5, q.getCategory());
+        prepareStatementWithQuote(preparedStatement, q);
         preparedStatement.execute();
         connection.close();
     }
 
     @Override
     public List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc) throws SQLException {
-        List<Quote> quotesOfPageX = new ArrayList<>();
         int offset = (page - 1) * perPage;
-        Connection connection = dataSource.getConnection();
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM quote ");
-        sb.append(" ORDER BY ");
-        sb.append(sortBy);
-        sb.append(" ");
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM quote ");
+        query.append(" ORDER BY ");
+        query.append(sortBy);
         if (asc) {
-            sb.append(" ASC ");
+            query.append(" ASC ");
         } else {
-            sb.append(" DESC ");
+            query.append(" DESC ");
         }
-        sb.append("LIMIT ");
-        sb.append(perPage);
-        sb.append(" OFFSET ");
-        sb.append(offset);
-        sb.append(";");
+        query.append("LIMIT ");
+        query.append(perPage);
+        query.append(" OFFSET ");
+        query.append(offset);
+        query.append(";");
 
-        PreparedStatement preparedStatement = connection.prepareStatement(sb.toString());
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String quote = resultSet.getString("quote");
-            String author = resultSet.getString("author");
-            Integer date = (Integer) resultSet.getObject("date");
-            String source = resultSet.getString("source");
-            String category = resultSet.getString("category");
-            quotesOfPageX.add(new Quote(id, quote, author, date, source, category));
-        }
-        connection.close();
-
-        return quotesOfPageX;
+        return extractQuotes(query.toString());
     }
 
     @Override
@@ -195,23 +156,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
 
     @Override
     public List<Quote> getAllQuotes() throws SQLException {
-        List<Quote> allQuotes = new ArrayList<>();
-
-        Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM quote;");
-        ResultSet resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String quote = resultSet.getString("quote");
-            String author = resultSet.getString("author");
-            Integer date = (Integer) resultSet.getObject("date");
-            String source = resultSet.getString("source");
-            String category = resultSet.getString("category");
-            allQuotes.add(new Quote(id, quote, author, date, source, category));
-        }
-        connection.close();
-
-        return allQuotes;
+        return extractQuotes("SELECT * FROM quote;");
     }
 
     @Override
@@ -224,12 +169,7 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
 
         Quote q = null;
         if(hasQuote) {
-            String quote = resultSet.getString("quote");
-            String author = resultSet.getString("author");
-            Integer date = (Integer) resultSet.getObject("date");
-            String source = resultSet.getString("source");
-            String category = resultSet.getString("category");
-            q = new Quote(id, quote, author, date, source, category);
+            q = extractQuote(resultSet);
         }
 
         connection.close();
@@ -237,5 +177,46 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         return q;
     }
 
+    private List<Quote> extractQuotes(String query) throws SQLException {
+        List<Quote> quotes = new ArrayList<>();
 
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            quotes.add(extractQuote(resultSet));
+        }
+
+        connection.close();
+        return quotes;
+    }
+
+    private Quote extractQuote(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String quote = resultSet.getString("quote");
+        String author = resultSet.getString("author");
+        Integer date = (Integer) resultSet.getObject("date");
+        String source = resultSet.getString("source");
+        String category = resultSet.getString("category");
+        return new Quote(id, quote, author, date, source, category);
+    }
+
+    private void prepareStatementWithQuote(PreparedStatement preparedStatement, Quote q) throws SQLException {
+        preparedStatement.setString(1, q.getText());
+        preparedStatement.setString(2, q.getAuthor());
+        if (q.getDate() == null) {
+            preparedStatement.setNull(3, Types.INTEGER);
+        } else {
+            preparedStatement.setInt(3, q.getDate());
+        }
+        preparedStatement.setString(4, q.getSource());
+        preparedStatement.setString(5, q.getCategory());
+    }
+
+    private JsonArray getJsonArrayResource(String path) {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(path);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        return new JsonParser().parse(br).getAsJsonArray();
+    }
 }

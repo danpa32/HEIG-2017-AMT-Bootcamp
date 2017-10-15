@@ -23,29 +23,9 @@ public class EditQuoteServlet extends HttpServlet {
     AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Integer date = null;
-        String dateParam = request.getParameter("date");
-        if(dateParam != null && !dateParam.isEmpty()) {
-            try {
-                date = Integer.parseInt(dateParam);
-            } catch (NumberFormatException nfe){
-                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The date is not a number."));
-            }
-        }
+        Quote q = quotesManager.extractQuote(request);
 
-        String authorParam = request.getParameter("author");
-        if (authorParam.isEmpty()) {
-            authorParam = "Unknown";
-        }
-
-        boolean success = quotesManager.editQuote(new Quote(
-                Integer.parseInt(request.getParameter("id")),
-                request.getParameter("quote"),
-                authorParam,
-                date,
-                request.getParameter("source"),
-                request.getParameter("category")
-        ));
+        boolean success = quotesManager.editQuote(q);
 
         if (success) {
             alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully updated."));

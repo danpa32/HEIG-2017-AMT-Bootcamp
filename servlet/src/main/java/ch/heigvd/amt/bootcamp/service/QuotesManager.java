@@ -1,10 +1,12 @@
 package ch.heigvd.amt.bootcamp.service;
 
+import ch.heigvd.amt.bootcamp.model.Alert;
 import ch.heigvd.amt.bootcamp.model.Quote;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,9 @@ import java.util.Random;
 public class QuotesManager implements QuotesManagerLocal {
     @EJB
     QuotesDataStoreLocal quotesDataStore;
+
+    @EJB
+    AlertManagerLocal alertManager;
 
     @Override
     public List<Quote> getAllQuotes() {
@@ -98,6 +103,67 @@ public class QuotesManager implements QuotesManagerLocal {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    @Override
+    public Quote extractQuote(HttpServletRequest request) {
+        // Id
+        String idParam = request.getParameter("id");
+        int id = 0;
+        if(idParam != null) {
+            try {
+                id = Integer.parseInt(idParam);
+            } catch (NumberFormatException nfe){
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The id is not a number."));
+            }
+        }
+
+        // Quote
+        String quoteParam = request.getParameter("quote");
+        if(quoteParam == null) {
+            // Exception ?
+        }
+
+        // Author
+        String authorParam = request.getParameter("author");
+        if (authorParam.isEmpty()) {
+            authorParam = Quote.DEFAULT_AUTHOR;
+        }
+
+        // Date
+        String dateParam = request.getParameter("date");
+        Integer date = null;
+        if(dateParam != null && !dateParam.isEmpty()) {
+            try {
+                date = Integer.parseInt(dateParam);
+            } catch (NumberFormatException nfe){
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The date is not a number."));
+            }
+        }
+
+        // Source
+        String sourceParam = request.getParameter("source");
+        if(quoteParam == null) {
+            // Exception ?
+        }
+
+        // Category
+        String categoryParam = request.getParameter("category");
+        if(quoteParam == null || quoteParam.isEmpty()) {
+            categoryParam = Quote.DEFAULT_CATEGORY;
+        }
+
+
+        Quote q = new Quote(
+                id,
+                quoteParam,
+                authorParam,
+                date,
+                sourceParam,
+                categoryParam
+        );
+
+        return q;
     }
 
     @Override

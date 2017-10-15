@@ -22,29 +22,9 @@ public class AddQuoteServlet extends HttpServlet {
     AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Integer date = null;
-        String dateParam = request.getParameter("date");
-        if(dateParam != null && !dateParam.isEmpty()) {
-            try {
-                date = Integer.parseInt(dateParam);
-            } catch (NumberFormatException nfe){
-                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The date is not a number."));
-            }
-        }
+        Quote q = quotesManager.extractQuote(request);
 
-        String authorParam = request.getParameter("author");
-        if (authorParam.isEmpty()) {
-            authorParam = "Unknown";
-        }
-
-        boolean success = quotesManager.addQuote(new Quote(
-                0,
-                request.getParameter("quote"),
-                authorParam,
-                date,
-                request.getParameter("source"),
-                request.getParameter("category")
-        ));
+        boolean success = quotesManager.addQuote(q);
 
         if (success) {
             alertManager.add(request, new Alert(Alert.Level.SUCCESS, "Success", "The quote has been successfully added."));

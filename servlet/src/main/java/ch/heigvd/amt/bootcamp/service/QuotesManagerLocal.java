@@ -3,6 +3,7 @@ package ch.heigvd.amt.bootcamp.service;
 import ch.heigvd.amt.bootcamp.model.Quote;
 
 import javax.ejb.Local;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Local
@@ -15,5 +16,8 @@ public interface QuotesManagerLocal {
     boolean editQuote(Quote q);
     boolean addQuote(Quote q);
     int getNbQuotes();
+
+    Quote extractQuote(HttpServletRequest request);
+
     List<String> getCategories();
 }

@@ -1,4 +1,3 @@
-<%@ page import="ch.heigvd.amt.bootcamp.model.Quote" %>
 <%--
   Created by IntelliJ IDEA.
   User: christopher
@@ -28,7 +27,7 @@
             <div class="form-group col-md-6">
                 <label for="category">Category</label>
                 <select id="category" name="category" class="form-control">
-                    <c:forEach var="category" items="${Quote.CATEGORIES}">
+                    <c:forEach var="category" items="${requestScope.categories}">
                         <option value="${category}" <c:if test="${quote != null && quote.category == category}">selected</c:if>>${category}</option>
                     </c:forEach>
                 </select>

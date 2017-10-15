@@ -1,7 +1,9 @@
 package ch.heigvd.amt.bootcamp.model;
 
 public class Quote {
-    public static String[] CATEGORIES = {"Philosophy", "War", "Life"};
+    public final static String DEFAULT_CATEGORY = "(No Category)";
+    public final static String DEFAULT_AUTHOR = "Unknown";
+
 
     private int id;
 
