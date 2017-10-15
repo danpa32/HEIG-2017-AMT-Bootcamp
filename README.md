@@ -30,6 +30,9 @@ Christopher Meier and Daniel Palumbo for the HEIG-VD ([AMT 2017]( https://github
 ## Credits
 
 Template Boostrap : https://startbootstrap.com/template-overviews/heroic-features/
-Countries : https://gist.githubusercontent.com/keeguon/2310008/raw/bdc2ce1c1e3f28f9cab5b4393c7549f38361be4e/countries.json
+
+Countries : https://gist.github.com/keeguon/2310008
+
 Quotes : https://raw.githubusercontent.com/4skinSkywalker/Database-Quotes-JSON/master/quotes.json
+
 Categories : http://www.quoteland.com/topic.asp
