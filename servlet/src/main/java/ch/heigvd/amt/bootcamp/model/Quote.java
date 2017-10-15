@@ -23,7 +23,7 @@ public class Quote {
     }
 
     public enum FIELDS {
-        ID, QUOTE, AUTHOR, DATE, SOURCE, CATEGORY
+        ID, QUOTE, AUTHOR, DATE, SOURCE, CATEGORY;
     }
 
     public int getId() {
