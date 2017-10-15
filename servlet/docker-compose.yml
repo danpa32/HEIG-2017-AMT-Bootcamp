@@ -14,12 +14,3 @@ services:
             - MYSQL_ROOT_PASSWORD=adminpw
         ports:
             - "3307:3306"
-    phpmyadmin:
-        build: ./images/phpmyadmin
-        environment:
-            - MYSQL_ROOT_PASSWORD=adminpw
-        ports:
-            - "6060:80"
-        links:
-            - mysql:db
- 
