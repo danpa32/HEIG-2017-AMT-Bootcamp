@@ -10,10 +10,10 @@ import java.util.*;
 public class AlertManager implements AlertManagerLocal {
     @Override
     public void add(HttpServletRequest request, Alert alert) {
-        Collection<Alert> alerts = (SortedSet<Alert>) request.getAttribute("alerts");
+        Collection<Alert> alerts = (Collection<Alert>) request.getAttribute("alerts");
 
         if(alerts == null) {
-            alerts = new TreeSet<>(Comparator.comparing((a) -> a.getLevelEnum().ordinal()));
+            alerts = new PriorityQueue<>(Comparator.comparing((a) -> a.getLevelEnum().ordinal()));
             request.setAttribute("alerts", alerts);
         }
 

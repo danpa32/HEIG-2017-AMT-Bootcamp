@@ -49,11 +49,10 @@
     <c:if test="${alerts != null}" >
         <div id="alertCarousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
-                <c:forEach var="alertIndic" items="${alerts}" varStatus="statIndic">
-                    <li class="bg-${alertIndic.level}"
+                <c:forEach var="alertIndic" items="${alerts}" varStatus="stat">
+                    <li class="bg-${alertIndic.level} <c:if test="${stat.first}" >active</c:if>"
                     data-target="#alertCarousel"
-                    data-slide-to="${statIndic.index}"
-                    <c:if test="${statIndic.first}" >class="active"</c:if> ></li>
+                    data-slide-to="${statIndic.index}" ></li>
                 </c:forEach>
             </ol>
             <div class="carousel-inner">
