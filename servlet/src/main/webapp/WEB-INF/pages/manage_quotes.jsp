@@ -16,17 +16,17 @@
 
     <header class="my-4 btn-toolbar justify-content-end">
         <a href="./addQuote" class="btn btn-primary mr-2">Add New</a>
-        <div class="btn-group mr-2" role="group">
-            <a id="btnGroupDrop1" href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Sort by
-            </a>
-            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                <c:forEach var="field" items="<%=Quote.FIELDS.values()%>">
-                    <a class="dropdown-item <c:if test="${field eq requestScope.sortBy}">active</c:if>" href="<c:url value="?${requestScope.sortQuery}"><c:param name="sort" value="${field}" /></c:url>">${field}</a>
-                </c:forEach>
-            </div>
-        </div>
         <c:if test="${requestScope.quotes.size() > 0}">
+            <div class="btn-group mr-2" role="group">
+                <a id="btnGroupDrop1" href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sort by
+                </a>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <c:forEach var="field" items="<%=Quote.FIELDS.values()%>">
+                        <a class="dropdown-item <c:if test="${field eq requestScope.sortBy}">active</c:if>" href="<c:url value="?${requestScope.sortQuery}"><c:param name="sort" value="${field}" /></c:url>">${field}</a>
+                    </c:forEach>
+                </div>
+            </div>
             <c:choose>
                 <c:when test="${requestScope.asc == false}" >
                     <div class="btn-group" role="group">
