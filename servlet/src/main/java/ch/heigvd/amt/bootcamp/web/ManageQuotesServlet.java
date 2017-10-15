@@ -1,7 +1,6 @@
 package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
-import ch.heigvd.amt.bootcamp.service.QuotesManager;
 import ch.heigvd.amt.bootcamp.service.QuotesManagerLocal;
 
 import javax.ejb.EJB;
@@ -33,6 +32,17 @@ public class ManageQuotesServlet extends HttpServlet {
             request.getSession().setAttribute("confirmDelete", !confirmParam.equals("0"));
         }
 
+        String delParam = request.getParameter("del");
+        if(delParam != null) {
+            try {
+                int delId = Integer.parseInt(delParam);
+
+
+            } catch (NumberFormatException nfe) {
+                request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Unparseable parameter", "The delete parameter is not an integer."));
+            }
+        }
+
         // Asc/Desc
         String ascParam = request.getParameter("asc");
         boolean asc = true;
@@ -51,17 +61,19 @@ public class ManageQuotesServlet extends HttpServlet {
                 request.setAttribute("alert", new Alert(Alert.Level.DANGER, "Unparseable parameter", "The page parameter is not an integer."));
             }
         }
-        setPagination(request, currentPage, 45);
+        setPaginationAttributes(request, currentPage, 45);
 
         // Recuperate the page of quote
         List quotes = quotesManager.getAllQuotes();
 
         request.setAttribute("quotes", quotes);
 
+        request.setAttribute("alert", new Alert(Alert.Level.PRIMARY, "Some alert", "With more information."));
+
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
     }
 
-    private void setPagination(HttpServletRequest request, int currentPage, int lastPage) {
+    private void setPaginationAttributes(HttpServletRequest request, int currentPage, int lastPage) {
         final int SURROUNDING_PAGES = 3;
 
         request.setAttribute("currentPage", currentPage);
