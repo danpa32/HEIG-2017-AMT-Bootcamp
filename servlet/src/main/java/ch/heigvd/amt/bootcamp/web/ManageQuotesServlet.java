@@ -74,6 +74,7 @@ public class ManageQuotesServlet extends HttpServlet {
                 alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The sort parameter \"" + sortParam + "\" is not valid."));
             }
         }
+        request.setAttribute("sortBy", sortBy.toUpperCase());
 
         // Pagination
         String pageParam = request.getParameter("page");

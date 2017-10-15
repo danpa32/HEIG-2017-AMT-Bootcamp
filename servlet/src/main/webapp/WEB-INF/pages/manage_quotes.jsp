@@ -22,7 +22,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                 <c:forEach var="field" items="<%=Quote.FIELDS.values()%>">
-                    <a class="dropdown-item" href="<c:url value="?${requestScope.sortQuery}"><c:param name="sort" value="${field}" /></c:url>">${field}</a>
+                    <a class="dropdown-item <c:if test="${field eq requestScope.sortBy}">active</c:if>" href="<c:url value="?${requestScope.sortQuery}"><c:param name="sort" value="${field}" /></c:url>">${field}</a>
                 </c:forEach>
             </div>
         </div>
