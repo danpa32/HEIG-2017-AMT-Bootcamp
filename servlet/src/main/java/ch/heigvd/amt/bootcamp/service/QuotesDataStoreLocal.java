@@ -16,4 +16,5 @@ public interface QuotesDataStoreLocal {
     void addQuote(Quote q) throws SQLException;
     List<Quote> getPageOfQuotes(int page, int perPage, String sortBy, boolean asc) throws SQLException;
     int getNbQuotes() throws SQLException;
+    List<String> getCategories();
 }

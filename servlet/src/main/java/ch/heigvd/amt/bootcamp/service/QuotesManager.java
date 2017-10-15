@@ -100,5 +100,10 @@ public class QuotesManager implements QuotesManagerLocal {
         }
     }
 
+    @Override
+    public List<String> getCategories() {
+        return quotesDataStore.getCategories();
+    }
+
 
 }

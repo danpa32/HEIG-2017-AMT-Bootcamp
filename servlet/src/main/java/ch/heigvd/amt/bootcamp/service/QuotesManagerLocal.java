@@ -15,4 +15,5 @@ public interface QuotesManagerLocal {
     boolean editQuote(Quote q);
     boolean addQuote(Quote q);
     int getNbQuotes();
+    List<String> getCategories();
 }
