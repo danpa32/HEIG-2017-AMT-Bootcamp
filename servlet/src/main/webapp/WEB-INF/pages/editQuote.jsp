@@ -1,12 +1,14 @@
+<%--
+  File: editQuote.jsp
+  Authors:
+    - Christopher MEIER
+    - Daniel PALUMBO
+  Date: 16.10.17
+  Page to edit a quote.
+--%>
 <%@ page import="ch.heigvd.amt.bootcamp.web.AddQuoteServlet" %>
 <%@ page import="ch.heigvd.amt.bootcamp.model.Quote" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: daniel
-  Date: 12.10.17
-  Time: 09:11
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@include file="includes/header.jsp"%>
 
 <div class="container">

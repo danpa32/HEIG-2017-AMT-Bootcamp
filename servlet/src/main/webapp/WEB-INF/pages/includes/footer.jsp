@@ -1,3 +1,12 @@
+<%--
+  File: footer.jsp
+  Authors:
+    - Christopher MEIER
+    - Daniel PALUMBO
+  Date: 16.10.17
+  Footer for all pages.
+--%>
+
 <!-- Footer -->
 <footer class="py-5 bg-dark">
     <div class="container">

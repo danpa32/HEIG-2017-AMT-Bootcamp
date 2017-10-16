@@ -1,11 +1,13 @@
-<%@ page import="ch.heigvd.amt.bootcamp.web.ConfigurationServlet" %>
 <%--
-  Created by IntelliJ IDEA.
-  User: daniel
-  Date: 12.10.17
-  Time: 09:11
-  To change this template use File | Settings | File Templates.
+  File: configuration.jsp
+  Authors:
+    - Christopher MEIER
+    - Daniel PALUMBO
+  Date: 16.10.17
+  Page to configure the database.
 --%>
+<%@ page import="ch.heigvd.amt.bootcamp.web.ConfigurationServlet" %>
+
 <%@include file="includes/header.jsp"%>
 
 <div class="container">

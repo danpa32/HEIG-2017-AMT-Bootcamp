@@ -1,3 +1,10 @@
+/**
+ * file: ConfigurationServlet.java
+ * authors:
+ *  - Christopher MEIER
+ *  - Daniel PALUMBO
+ * date: 16.10.2017
+ */
 package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;

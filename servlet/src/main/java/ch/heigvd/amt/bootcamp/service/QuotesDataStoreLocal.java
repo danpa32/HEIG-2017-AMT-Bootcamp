@@ -1,3 +1,10 @@
+/**
+ * file: QuotesDataStoreLocal.java
+ * authors:
+ *  - Christopher MEIER
+ *  - Daniel PALUMBO
+ * date: 16.10.2017
+ */
 package ch.heigvd.amt.bootcamp.service;
 
 import ch.heigvd.amt.bootcamp.model.Quote;

@@ -1,3 +1,10 @@
+/**
+ * file: QuotesDataStore.java
+ * authors:
+ *  - Christopher MEIER
+ *  - Daniel PALUMBO
+ * date: 16.10.2017
+ */
 package ch.heigvd.amt.bootcamp.service;
 
 import ch.heigvd.amt.bootcamp.model.Quote;
@@ -176,6 +183,12 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         return q;
     }
 
+    /**
+     * Extract all quotes from a result set
+     * @param query The query which return a list of quote information
+     * @return The list of extracted quote
+     * @throws SQLException
+     */
     private List<Quote> extractQuotes(String query) throws SQLException {
         List<Quote> quotes = new ArrayList<>();
 
@@ -191,6 +204,12 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         return quotes;
     }
 
+    /**
+     * Extract a quote from a result set
+     * @param resultSet The result set return by a query
+     * @return The extracted quote
+     * @throws SQLException
+     */
     private Quote extractQuote(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         String quote = resultSet.getString("quote");
@@ -201,6 +220,12 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         return new Quote(id, quote, author, date, source, category);
     }
 
+    /**
+     * Prepare a statement with the information from a quote
+     * @param preparedStatement The prepared statement
+     * @param q The quote with the information
+     * @throws SQLException
+     */
     private void prepareStatementWithQuote(PreparedStatement preparedStatement, Quote q) throws SQLException {
         preparedStatement.setString(1, q.getText());
         preparedStatement.setString(2, q.getAuthor());
@@ -213,6 +238,11 @@ public class QuotesDataStore implements QuotesDataStoreLocal {
         preparedStatement.setString(5, q.getCategory());
     }
 
+    /**
+     * Recuperate a JSON array from file
+     * @param path The path of the file
+     * @return The JSON array
+     */
     private JsonArray getJsonArrayResource(String path) {
         InputStream is = getClass().getClassLoader().getResourceAsStream(path);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));

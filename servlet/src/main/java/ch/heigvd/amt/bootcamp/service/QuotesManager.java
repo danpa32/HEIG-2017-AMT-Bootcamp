@@ -1,3 +1,10 @@
+/**
+ * file: QuotesManager.java
+ * authors:
+ *  - Christopher MEIER
+ *  - Daniel PALUMBO
+ * date: 16.10.2017
+ */
 package ch.heigvd.amt.bootcamp.service;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
@@ -132,6 +139,8 @@ public class QuotesManager implements QuotesManagerLocal {
         String authorParam = request.getParameter("author");
         if (authorParam.isEmpty()) {
             authorParam = Quote.DEFAULT_AUTHOR;
+        } else if(authorParam.length() > 50) {
+            alertManager.add(request, new Alert(Alert.Level.WARNING, "Too long parameter", "The length of the author parameter must be smaller than 50 characters"));
         }
 
         // Date
@@ -149,11 +158,13 @@ public class QuotesManager implements QuotesManagerLocal {
         String sourceParam = request.getParameter("source");
         if(sourceParam == null) {
             sourceParam = "";
+        } else if(sourceParam.length() > 50) {
+            alertManager.add(request, new Alert(Alert.Level.WARNING, "Too long parameter", "The length of the source parameter must be smaller than 50 characters"));
         }
 
         // Category
         String categoryParam = request.getParameter("category");
-        if(categoryParam == null || categoryParam.isEmpty()) {
+        if(categoryParam == null || categoryParam.isEmpty() || !getCategories().contains(categoryParam)) {
             categoryParam = Quote.DEFAULT_CATEGORY;
         }
 

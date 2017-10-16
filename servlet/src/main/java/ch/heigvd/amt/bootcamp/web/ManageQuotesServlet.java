@@ -1,3 +1,10 @@
+/**
+ * file: ManageQuotesServlet.java
+ * authors:
+ *  - Christopher MEIER
+ *  - Daniel PALUMBO
+ * date: 16.10.2017
+ */
 package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
@@ -106,12 +113,17 @@ public class ManageQuotesServlet extends HttpServlet {
 
         // Recuperate the page of quote
         List quotes = quotesManager.getPageOfQuotes(currentPage, nbPerPage, sortBy, asc);
-
         request.setAttribute("quotes", quotes);
 
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
     }
 
+    /**
+     * Calculate the pagination link to be shown.
+     * @param request The request which will store the URL
+     * @param currentPage The current page number
+     * @param per_page The number of quotes per page.
+     */
     private void setPaginationAttributes(HttpServletRequest request, int currentPage, int per_page) {
         int nbQuotes = quotesManager.getNbQuotes();
         int lastPage = ((nbQuotes - 1) / per_page) + 1;
@@ -142,7 +154,7 @@ public class ManageQuotesServlet extends HttpServlet {
 
     /**
      * Generate URL used for sorting purpose
-     * @param request
+     * @param request The request which will store the URL
      */
     private void setSanitizedURL(HttpServletRequest request) {
         String query = request.getQueryString();
@@ -160,6 +172,12 @@ public class ManageQuotesServlet extends HttpServlet {
         request.setAttribute("sortQuery", sortQuery);
     }
 
+    /**
+     * Remove the specified parameter and their value from a query string.
+     * @param queryString The query string from which to remove the specified parameter
+     * @param paramNames The names of the parameter to remove
+     * @return The query string without the named parameters
+     */
     private String removeQueryStringParams(String queryString, String... paramNames) {
         if(queryString == null) {
             return "";

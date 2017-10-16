@@ -1,9 +1,10 @@
 <%--
-  Created by IntelliJ IDEA.
-  User: christopher
-  Date: 14.10.17
-  Time: 15:25
-  To change this template use File | Settings | File Templates.
+  File: quoteForm.jsp
+  Authors:
+    - Christopher MEIER
+    - Daniel PALUMBO
+  Date: 16.10.17
+  Form used to edit or add a quote.
 --%>
 
 <form class="my-4" method="post" role="form">

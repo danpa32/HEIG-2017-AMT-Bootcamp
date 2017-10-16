@@ -1,3 +1,10 @@
+/**
+ * file: EditQuoteServlet.java
+ * authors:
+ *  - Christopher MEIER
+ *  - Daniel PALUMBO
+ * date: 16.10.2017
+ */
 package ch.heigvd.amt.bootcamp.web;
 
 import ch.heigvd.amt.bootcamp.model.Alert;
@@ -46,6 +53,10 @@ public class EditQuoteServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/pages/editQuote.jsp").forward(request, response);
     }
 
+    /**
+     * Get and specify the information to be shown.
+     * @param request The HTTP request
+     */
     private void specifyQuote(HttpServletRequest request) {
         boolean quoteSpecified = false;
         String quoteId = request.getParameter("id");
