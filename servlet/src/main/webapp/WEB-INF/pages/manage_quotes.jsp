@@ -109,6 +109,12 @@
                         <a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${requestScope.nextPage}" /></c:url>">Next</a>
                     </li>
                 </ul>
+                <c:if test="${sessionScope.confirmDelete == false}">
+                    <div class="container text-right mb-2">
+                        <a href="<c:url value="?${requestScope.cleanQuery}"><c:param name="confirm" value="1" /></c:url>" >Ask again for confirmation before delete.</a>
+                    </div>
+                </c:if>
+
             </nav>
         </c:when>
         <c:otherwise>

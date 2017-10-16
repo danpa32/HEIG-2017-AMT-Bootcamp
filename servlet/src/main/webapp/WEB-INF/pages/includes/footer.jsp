@@ -12,11 +12,11 @@
 <script src="<c:url value="/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
 
 <!-- Confirmation modal -->
-<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="Confirm delete modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Are you sure ?</h5>
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Are you sure ?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
