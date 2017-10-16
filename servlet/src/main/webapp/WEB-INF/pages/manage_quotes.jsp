@@ -1,4 +1,3 @@
-<%@ page import="ch.heigvd.amt.bootcamp.web.ManageQuotesServlet" %>
 <%@ page import="ch.heigvd.amt.bootcamp.model.Quote" %>
 <%--
   Created by IntelliJ IDEA.
@@ -13,39 +12,46 @@
 <div class="container">
 
     <!-- Page Features -->
-
-    <header class="my-4 btn-toolbar justify-content-end">
-        <a href="./addQuote" class="btn btn-primary mr-2">Add New</a>
-        <c:if test="${requestScope.quotes.size() > 0}">
-            <div class="btn-group mr-2" role="group">
-                <a id="btnGroupDrop1" href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Sort by
-                </a>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <c:forEach var="field" items="<%=Quote.FIELDS.values()%>">
-                        <a class="dropdown-item <c:if test="${field eq requestScope.sortBy}">active</c:if>" href="<c:url value="?${requestScope.sortQuery}"><c:param name="sort" value="${field}" /></c:url>">${field}</a>
-                    </c:forEach>
-                </div>
+    <c:set var="hasQuotes" value="${requestScope.quotes.size() > 0}" />
+    <header class="my-4 btn-toolbar justify-content-between">
+        <c:if test="${hasQuotes}">
+            <div>
+                <span class="navbar-text">${requestScope.rangeStart} - ${requestScope.rangeEnd} of ${requestScope.rangeLast}</span>
             </div>
-            <c:choose>
-                <c:when test="${requestScope.asc == false}" >
-                    <div class="btn-group" role="group">
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-outline-primary">Asc</a>
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-primary">Desc</a>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="btn-group" role="group">
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-primary">Asc</a>
-                        <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-outline-primary">Desc</a>
-                    </div>
-                </c:otherwise>
-            </c:choose>
         </c:if>
+        <div>
+            <a href="<c:url value="/addQuote" />" class="btn btn-primary mr-2">Add New</a>
+            <c:if test="${hasQuotes}">
+                <div class="btn-group mr-2" role="group">
+                    <a id="btnGroupDrop1" href="<c:url value="?${requestScope.cleanQuery}" />" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Sort by
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="sortByDrop">
+                        <c:forEach var="field" items="<%=Quote.FIELDS.values()%>">
+                            <a class="dropdown-item <c:if test="${field eq requestScope.sortBy}">active</c:if>" href="<c:url value="?${requestScope.sortQuery}"><c:param name="sort" value="${field}" /></c:url>">${field}</a>
+                        </c:forEach>
+                    </div>
+                </div>
+                <c:choose>
+                    <c:when test="${requestScope.asc == false}" >
+                        <div class="btn-group" role="group">
+                            <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-outline-primary">Asc</a>
+                            <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-primary">Desc</a>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="btn-group" role="group">
+                            <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="1" /></c:url>" class="btn btn-primary">Asc</a>
+                            <a href="<c:url value="?${requestScope.ascQuery}"><c:param name="asc" value="0" /></c:url>" class="btn btn-outline-primary">Desc</a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </c:if>
+        </div>
     </header>
 
     <c:choose>
-        <c:when test="${requestScope.quotes.size() > 0}">
+        <c:when test="${hasQuotes}">
             <div class="row">
                 <c:forEach var="quote" items="${requestScope.quotes}">
                     <div class="col-lg-3 col-md-6 mb-4">
@@ -69,18 +75,18 @@
                 </c:forEach>
             </div>
 
-            <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation">
                 <c:set var="currentPage" value="${requestScope.currentPage}" />
                 <c:set var="lastPage" value="${requestScope.lastPage}" />
 
                 <ul class="pagination justify-content-center">
                     <li class="page-item <c:if test="${currentPage == 1}">disabled</c:if>">
-                        <a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${requestScope.prevPage}" /></c:url>" tabindex="-1">Previous</a>
+                        <a class="page-link" href="<c:url value="?${requestScope.pageQuery}"><c:param name="page" value="${requestScope.prevPage}" /></c:url>" tabindex="-1">Previous</a>
                     </li>
 
                     <c:if test="${requestScope.showFirstPageLink}">
                         <!-- First page -->
-                        <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="1" /></c:url>">1</a></li>
+                        <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.pageQuery}"><c:param name="page" value="1" /></c:url>">1</a></li>
                     </c:if>
                     <c:if test="${requestScope.showPrevPagesElipse}">
                         <li class="page-item px-2">...</li>
@@ -89,10 +95,10 @@
                     <c:forEach begin="${requestScope.firstSurroundPageLink}" end="${requestScope.lastSurroundPageLink}" var="i">
                         <c:choose>
                             <c:when test="${currentPage == i}">
-                                <li class="page-item active"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${i}" /></c:url>">${i}<span class="sr-only">(current)</span></a></li>
+                                <li class="page-item active"><a class="page-link" href="<c:url value="?${requestScope.pageQuery}"><c:param name="page" value="${i}" /></c:url>">${i}<span class="sr-only">(current)</span></a></li>
                             </c:when>
                             <c:otherwise>
-                                <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${i}" /></c:url>">${i}</a></li>
+                                <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.pageQuery}"><c:param name="page" value="${i}" /></c:url>">${i}</a></li>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
@@ -102,19 +108,19 @@
                         <li class="page-item px-2">...</li>
                     </c:if>
                     <c:if test="${requestScope.showLastPageLink}">
-                        <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${lastPage}" /></c:url>">${lastPage}</a></li>
+                        <li class="page-item"><a class="page-link" href="<c:url value="?${requestScope.pageQuery}"><c:param name="page" value="${lastPage}" /></c:url>">${lastPage}</a></li>
                     </c:if>
 
                     <li class="page-item <c:if test="${currentPage eq lastPage}">disabled</c:if>" >
-                        <a class="page-link" href="<c:url value="?${requestScope.cleanQuery}"><c:param name="page" value="${requestScope.nextPage}" /></c:url>">Next</a>
+                        <a class="page-link" href="<c:url value="?${requestScope.pageQuery}"><c:param name="page" value="${requestScope.nextPage}" /></c:url>">Next</a>
                     </li>
                 </ul>
+
                 <c:if test="${sessionScope.confirmDelete == false}">
                     <div class="container text-right mb-2">
                         <a href="<c:url value="?${requestScope.cleanQuery}"><c:param name="confirm" value="1" /></c:url>" >Ask again for confirmation before delete.</a>
                     </div>
                 </c:if>
-
             </nav>
         </c:when>
         <c:otherwise>

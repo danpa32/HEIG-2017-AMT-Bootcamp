@@ -90,7 +90,7 @@ public class ManageQuotesServlet extends HttpServlet {
                 alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The page parameter is not an integer."));
             }
         }
-        setPaginationAttributes(request, currentPage, ((quotesManager.getNbQuotes() - 1) / NB_QUOTES_PER_PAGE) + 1);
+        setPaginationAttributes(request, currentPage, NB_QUOTES_PER_PAGE);
 
         // Recuperate the page of quote
         List quotes = quotesManager.getPageOfQuotes(currentPage, NB_QUOTES_PER_PAGE, sortBy, asc);
@@ -100,8 +100,14 @@ public class ManageQuotesServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/pages/manage_quotes.jsp").forward(request, response);
     }
 
-    private void setPaginationAttributes(HttpServletRequest request, int currentPage, int lastPage) {
+    private void setPaginationAttributes(HttpServletRequest request, int currentPage, int per_page) {
+        int nbQuotes = quotesManager.getNbQuotes();
+        int lastPage = ((nbQuotes - 1) / per_page) + 1;
         final int SURROUNDING_PAGES = 3;
+
+        request.setAttribute("rangeStart", (currentPage - 1) * per_page + 1);
+        request.setAttribute("rangeEnd", Integer.min(nbQuotes, currentPage * per_page));
+        request.setAttribute("rangeLast", nbQuotes);
 
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("lastPage", lastPage);
@@ -129,23 +135,27 @@ public class ManageQuotesServlet extends HttpServlet {
     private void setSanitizedURL(HttpServletRequest request) {
         String query = request.getQueryString();
 
-        String cleanQuery = removeQueryStringParam(query, "del");
-        cleanQuery = removeQueryStringParam(cleanQuery, "confirm");
-        cleanQuery = removeQueryStringParam(cleanQuery, "page");
+        String cleanQuery = removeQueryStringParams(query, "del", "confirm");
         request.setAttribute("cleanQuery", cleanQuery);
 
-        String ascQuery = removeQueryStringParam(query, "asc");
+        String pageQuery = removeQueryStringParams(cleanQuery, "page");
+        request.setAttribute("pageQuery", pageQuery);
+
+        String ascQuery = removeQueryStringParams(cleanQuery, "asc");
         request.setAttribute("ascQuery", ascQuery);
 
-        String sortQuery = removeQueryStringParam(query, "sort");
+        String sortQuery = removeQueryStringParams(cleanQuery, "sort");
         request.setAttribute("sortQuery", sortQuery);
     }
 
-    private String removeQueryStringParam(String queryString, String paramName) {
+    private String removeQueryStringParams(String queryString, String... paramNames) {
         if(queryString == null) {
             return "";
         } else {
-            return queryString.replaceAll(paramName + "[^&]*&?", "").replaceFirst("&$", "");
+            for(String param : paramNames) {
+                queryString = queryString.replaceAll(param + "[^&]*&*", "");
+            }
+            return queryString;
         }
     }
 }
