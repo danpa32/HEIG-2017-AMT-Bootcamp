@@ -122,7 +122,10 @@ public class QuotesManager implements QuotesManagerLocal {
         String quoteParam = request.getParameter("quote");
         if(quoteParam == null) {
             alertManager.add(request, new Alert(Alert.Level.DANGER, "Missing parameter", "The quote content parameter is required."));
-            throw new IllegalArgumentException("The quote parameter is required");
+            return null;
+        } else if(quoteParam.isEmpty()) {
+            alertManager.add(request, new Alert(Alert.Level.WARNING, "Empty parameter", "The quote content parameter can not be empty."));
+            return null;
         }
 
         // Author

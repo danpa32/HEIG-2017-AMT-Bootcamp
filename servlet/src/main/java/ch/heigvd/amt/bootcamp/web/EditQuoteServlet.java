@@ -25,9 +25,9 @@ public class EditQuoteServlet extends HttpServlet {
     AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            Quote q = quotesManager.extractQuote(request);
+        Quote q = quotesManager.extractQuote(request);
 
+        if(q != null) {
             boolean success = quotesManager.editQuote(q);
 
             if (success) {
@@ -35,8 +35,6 @@ public class EditQuoteServlet extends HttpServlet {
             } else {
                 alertManager.add(request, new Alert(Alert.Level.WARNING, "Failed", "The update of the quote has failed."));
             }
-        } catch (IllegalArgumentException iae) {
-
         }
 
         specifyQuote(request);

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content="A website used to discover Java EE servlet, jsp, EJB and more">
     <meta name="author" content="Christopher Meier; Daniel Palumbo">
 
     <title>AMT - Bootcamp</title>
@@ -45,6 +45,7 @@
         </div>
     </nav>
 
+    <!-- Alerts -->
     <c:set var="alerts" value="${requestScope.alerts}" />
     <c:if test="${alerts != null}" >
         <div id="alertCarousel" class="carousel slide" data-ride="carousel">

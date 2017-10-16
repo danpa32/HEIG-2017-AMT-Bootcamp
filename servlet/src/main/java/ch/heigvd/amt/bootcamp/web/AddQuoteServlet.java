@@ -24,9 +24,9 @@ public class AddQuoteServlet extends HttpServlet {
     AlertManagerLocal alertManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            Quote q = quotesManager.extractQuote(request);
+        Quote q = quotesManager.extractQuote(request);
 
+        if(q != null) {
             boolean success = quotesManager.addQuote(q);
 
             if (success) {
@@ -34,8 +34,6 @@ public class AddQuoteServlet extends HttpServlet {
             } else {
                 alertManager.add(request, new Alert(Alert.Level.WARNING, "Failed", "The insertion of the quote has failed."));
             }
-        } catch (IllegalArgumentException iae) {
-
         }
 
         request.getRequestDispatcher("/WEB-INF/pages/addQuote.jsp").forward(request, response);
