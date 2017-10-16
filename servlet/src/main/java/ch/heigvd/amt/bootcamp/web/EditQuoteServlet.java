@@ -50,10 +50,14 @@ public class EditQuoteServlet extends HttpServlet {
         boolean quoteSpecified = false;
         String quoteId = request.getParameter("id");
         if(quoteId != null) {
-            int id = Integer.parseInt(quoteId);
-            Quote quote = quotesManager.getQuote(id);
-            quoteSpecified = true;
-            request.setAttribute("quote", quote);
+            try {
+                int id = Integer.parseInt(quoteId);
+                Quote quote = quotesManager.getQuote(id);
+                quoteSpecified = true;
+                request.setAttribute("quote", quote);
+            } catch (NumberFormatException nfe) {
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Not valid id", "The id is not a valid number."));
+            }
         }
 
         request.setAttribute("quoteSpecified", quoteSpecified);
