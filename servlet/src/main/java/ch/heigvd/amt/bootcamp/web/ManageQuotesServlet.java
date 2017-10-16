@@ -30,7 +30,7 @@ public class ManageQuotesServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final int NB_QUOTES_PER_PAGE = 32;
+        final int DEFAULT_NB_QUOTES_PER_PAGE = 32;
 
         // QueryString for options links
         setSanitizedURL(request);
@@ -55,7 +55,7 @@ public class ManageQuotesServlet extends HttpServlet {
                 }
 
             } catch (NumberFormatException nfe) {
-                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The delete parameter is not an integer."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparsable parameter", "The delete parameter is not an integer."));
             }
         }
 
@@ -75,7 +75,7 @@ public class ManageQuotesServlet extends HttpServlet {
                 Quote.FIELDS.valueOf(sortParam);
                 sortBy = sortParam.toLowerCase();
             } catch (IllegalArgumentException iae) {
-                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The sort parameter \"" + sortParam + "\" is not valid."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparsable parameter", "The sort parameter \"" + sortParam + "\" is not valid."));
             }
         }
         request.setAttribute("sortBy", sortBy.toUpperCase());
@@ -87,13 +87,25 @@ public class ManageQuotesServlet extends HttpServlet {
             try {
                 currentPage = Integer.parseInt(pageParam);
             } catch (NumberFormatException nfe) {
-                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The page parameter is not an integer."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparsable parameter", "The page parameter is not an integer."));
             }
         }
-        setPaginationAttributes(request, currentPage, NB_QUOTES_PER_PAGE);
+
+        // Quotes per page
+        String perPageParam = request.getParameter("perPage");
+        int nbPerPage = DEFAULT_NB_QUOTES_PER_PAGE;
+        if(perPageParam != null) {
+            try {
+                nbPerPage = Integer.parseInt(perPageParam);
+            } catch (NumberFormatException nfe) {
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparsable parameter", "The perPage parameter is not an integer."));
+            }
+        }
+
+        setPaginationAttributes(request, currentPage, nbPerPage);
 
         // Recuperate the page of quote
-        List quotes = quotesManager.getPageOfQuotes(currentPage, NB_QUOTES_PER_PAGE, sortBy, asc);
+        List quotes = quotesManager.getPageOfQuotes(currentPage, nbPerPage, sortBy, asc);
 
         request.setAttribute("quotes", quotes);
 

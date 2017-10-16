@@ -114,7 +114,7 @@ public class QuotesManager implements QuotesManagerLocal {
             try {
                 id = Integer.parseInt(idParam);
             } catch (NumberFormatException nfe){
-                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The id is not a number."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparsable parameter", "The id is not a number."));
             }
         }
 
@@ -141,7 +141,7 @@ public class QuotesManager implements QuotesManagerLocal {
             try {
                 date = Integer.parseInt(dateParam);
             } catch (NumberFormatException nfe){
-                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparseable parameter", "The date is not a number."));
+                alertManager.add(request, new Alert(Alert.Level.DANGER, "Unparsable parameter", "The date is not a number."));
             }
         }
 
